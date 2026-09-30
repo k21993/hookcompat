@@ -1,0 +1,6 @@
+id: pretooluse-shell-write-deny
+intent: Same request as pretooluse-shell-write, but the capture hook denies PreToolUse. The marker must not be created.
+prompt: "Run exactly this shell command and nothing else, then stop: echo hookcompat > {{marker}}"
+capture_events: [SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop]
+respond:
+  PreToolUse: deny
