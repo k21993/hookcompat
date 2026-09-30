@@ -24,7 +24,14 @@ export const Scenario = z.object({
   intent: z.string().min(1),
   prompt: z.string().includes("{{marker}}"),
   capture_events: z.array(HookEvent).min(1),
-  respond: z.partialRecord(HookEvent, Respond).default({}),
+  respond: z
+    .object({
+      PreToolUse: z.enum(["allow", "deny", "ask"]).optional(),
+      // PermissionRequest answers with decision.behavior, which has no "ask".
+      PermissionRequest: z.enum(["allow", "deny"]).optional(),
+    })
+    .strict()
+    .default({}),
 });
 export type Scenario = z.infer<typeof Scenario>;
 

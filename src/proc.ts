@@ -96,6 +96,18 @@ export function runBounded(opts: BoundedRunOptions): Promise<BoundedRunResult> {
     };
 
     child.on("error", (err) => finish({ launchError: err.message }));
+    // A child that outlives the main process can hold stdout/stderr open, delaying "close".
+    // So on "exit", kill the rest of the group, then finish on "close" once output is drained.
+    child.on("exit", (exitCode, signal) => {
+      clearTimeout(timer);
+      killGroup();
+      // Fallback if a descendant escaped the group and still holds the pipes.
+      setTimeout(() => {
+        child.stdout.destroy();
+        child.stderr.destroy();
+        finish({ exitCode, signal });
+      }, 1_000).unref();
+    });
     child.on("close", (exitCode, signal) => finish({ exitCode, signal }));
 
     child.stdin.end(opts.input ?? "");

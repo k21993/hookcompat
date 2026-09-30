@@ -49,6 +49,20 @@ describe("capture hook", () => {
     });
   });
 
+  it("answers PermissionRequest with decision.behavior", async () => {
+    const { res } = await invoke({ PermissionRequest: "deny" }, JSON.stringify({ hook_event_name: "PermissionRequest", tool_name: "Bash" }));
+    expect(JSON.parse(res.stdout)).toEqual({
+      hookSpecificOutput: { hookEventName: "PermissionRequest", decision: { behavior: "deny" } },
+    });
+  });
+
+  it("records none, and sends nothing, when an event has no response format", async () => {
+    const { dir, res } = await invoke({ Stop: "deny" }, JSON.stringify({ hook_event_name: "Stop" }));
+    expect(res.stdout).toBe("");
+    const evidence = JSON.parse(readFileSync(join(dir, "evidence.jsonl"), "utf8"));
+    expect(evidence.responded).toBe("none");
+  });
+
   it("keeps non-JSON stdin as raw text instead of failing", async () => {
     const { dir, res } = await invoke({}, "not json");
     expect(res.exitCode).toBe(0);

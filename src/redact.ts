@@ -10,6 +10,8 @@ export interface PathReplacement {
 /** Fields whose values identify a session or call. They are replaced with fake values of the same shape. */
 const ID_FIELDS = new Set(["session_id", "turn_id", "tool_use_id", "prompt_id", "call_id"]);
 
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const SECRET_PATTERNS: [string, RegExp][] = [
   ["anthropic-key", /sk-ant-[A-Za-z0-9_-]{10,}/],
   ["openai-key", /\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}/],
@@ -52,12 +54,24 @@ export function createRedactor(paths: PathReplacement[], secrets: string[], salt
     const next = () => digest[i++ % digest.length]!;
     // Keep a leading alphabetic prefix such as "toolu_" or "call_" so the shape stays realistic.
     const prefix = /^[A-Za-z]+_/.exec(original)?.[0] ?? "";
-    const body = original.slice(prefix.length).replace(/[0-9a-zA-Z]/g, (ch) => {
+    const rest = original.slice(prefix.length);
+    // Hex IDs (including UUIDs) stay hex, so validators still accept them.
+    const hex = /^(?:[0-9a-f-]+|[0-9A-F-]+)$/.test(rest);
+    const hexDigits = "0123456789abcdef";
+    let body = rest.replace(/[0-9a-zA-Z]/g, (ch) => {
       const n = next();
+      if (hex) {
+        const digit = hexDigits[n % 16]!;
+        return /[A-F]/.test(ch) ? digit.toUpperCase() : digit;
+      }
       if (/[0-9]/.test(ch)) return String(n % 10);
       if (/[a-z]/.test(ch)) return String.fromCharCode(97 + (n % 26));
       return String.fromCharCode(65 + (n % 26));
     });
+    if (UUID.test(rest)) {
+      // Keep the original version and variant digits so the fake is the same kind of UUID.
+      body = body.slice(0, 14) + rest[14] + body.slice(15, 19) + rest[19] + body.slice(20);
+    }
     const fake = prefix + body;
     idMap.set(original, fake);
     return fake;

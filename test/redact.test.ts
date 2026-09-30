@@ -1,5 +1,8 @@
+import { randomUUID } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { createRedactor, RedactionError } from "../src/redact.js";
+
+const VALID_UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 
 const redactor = createRedactor(
   [
@@ -25,9 +28,20 @@ describe("redaction", () => {
     const { value } = redactor.redact({ session_id: session, tool_use_id: "toolu_01AbCdEf", nested: { session_id: session } });
     const v = value as { session_id: string; tool_use_id: string; nested: { session_id: string } };
     expect(v.session_id).not.toBe(session);
-    expect(v.session_id).toMatch(/^[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}$/);
+    expect(v.session_id).toMatch(VALID_UUID);
     expect(v.nested.session_id).toBe(v.session_id);
     expect(v.tool_use_id).toMatch(/^toolu_[0-9][0-9][A-Z][a-z][A-Z][a-z][A-Z][a-z]$/);
+  });
+
+  it("keeps UUIDs valid, with the same version and variant", () => {
+    for (let i = 0; i < 200; i++) {
+      const original = randomUUID();
+      const fake = (redactor.redact({ session_id: original }).value as { session_id: string }).session_id;
+      expect(fake).not.toBe(original);
+      expect(fake).toMatch(VALID_UUID);
+      expect(fake[14]).toBe(original[14]);
+      expect(fake[19]).toBe(original[19]);
+    }
   });
 
   it("leaves other values untouched", () => {

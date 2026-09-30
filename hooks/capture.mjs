@@ -52,7 +52,17 @@ try {
 } catch {
   respondMap = {};
 }
-const responded = respondMap[event] ?? "none";
+
+// Hook output per event. Only events with a known response format can answer;
+// anything else is recorded as "none" so the evidence matches what was actually sent.
+const encoders = {
+  PreToolUse: (d) => ({ hookSpecificOutput: { hookEventName: "PreToolUse", permissionDecision: d, permissionDecisionReason: "hookcompat reference hook" } }),
+  PermissionRequest: (d) =>
+    d === "allow" || d === "deny" ? { hookSpecificOutput: { hookEventName: "PermissionRequest", decision: { behavior: d } } } : undefined,
+};
+const wanted = respondMap[event] ?? "none";
+const output = wanted === "none" ? undefined : encoders[event]?.(wanted);
+const responded = output ? wanted : "none";
 
 writeFileSync(
   join(captureDir, `${invocationId}-${event}.json`),
@@ -74,15 +84,5 @@ appendFileSync(
   }) + "\n",
 );
 
-if (responded !== "none" && (event === "PreToolUse" || event === "PermissionRequest")) {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: event,
-        permissionDecision: responded,
-        permissionDecisionReason: "hookcompat reference hook",
-      },
-    }),
-  );
-}
+if (output) process.stdout.write(JSON.stringify(output));
 process.exit(0);
