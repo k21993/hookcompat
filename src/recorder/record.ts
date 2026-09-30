@@ -7,7 +7,8 @@ import { CaptureContext, CaptureFixture, EvidenceLine, type Scenario } from "../
 import { createSandbox, sandboxEnv } from "./sandbox.js";
 import type { HarnessAdapter, HookRegistration } from "./adapters/types.js";
 
-export type RecordStatus = "ok" | "no-captures" | "cli-failed" | "timeout" | "redaction-failed";
+/** Anything other than "ok" means the captures must not be used as compatibility evidence. */
+export type RecordStatus = "ok" | "no-captures" | "incomplete" | "cli-failed" | "timeout" | "redaction-failed";
 
 export interface RecordOptions {
   adapter: HarnessAdapter;
@@ -83,6 +84,7 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
         event: string;
         payload?: unknown;
         rawStdin?: string;
+        stdinTruncated?: boolean;
       };
       const { value: payload, redactions } = redactor.redact(raw.payload);
       const fixture = CaptureFixture.parse({
@@ -97,6 +99,7 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
         runId,
         payload,
         ...(raw.rawStdin !== undefined ? { rawStdin: redactor.redactText(raw.rawStdin) } : {}),
+        stdinTruncated: raw.stdinTruncated === true,
         redactions,
         review: { status: "unreviewed" },
       });
@@ -131,7 +134,14 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
       envAllowlist: allowlist,
     });
 
+    let status: RecordStatus = "ok";
+    if (result.timedOut) status = "timeout";
+    else if (result.launchError || result.signal !== null || result.exitCode !== 0) status = "cli-failed";
+    else if (fixtures.some((f) => f.fixture.stdinTruncated)) status = "incomplete";
+    else if (fixtures.length === 0) status = "no-captures";
+
     const recording = {
+      status,
       context,
       scenario,
       marker: sb.marker,
@@ -164,10 +174,6 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
     writeFileSync(join(runDir, "recording.json"), JSON.stringify(recording, null, 2) + "\n");
 
     const eventsCaptured = fixtures.map((f) => f.fixture.event);
-    let status: RecordStatus = "ok";
-    if (result.timedOut) status = "timeout";
-    else if (result.launchError || (result.exitCode !== 0 && result.exitCode !== null)) status = "cli-failed";
-    else if (fixtures.length === 0) status = "no-captures";
 
     return { status, runId, cliVersion, runDir, eventsCaptured, markerCreated };
   } finally {

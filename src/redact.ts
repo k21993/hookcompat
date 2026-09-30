@@ -56,7 +56,8 @@ export function createRedactor(paths: PathReplacement[], secrets: string[], salt
     const prefix = /^[A-Za-z]+_/.exec(original)?.[0] ?? "";
     const rest = original.slice(prefix.length);
     // Hex IDs (including UUIDs) stay hex, so validators still accept them.
-    const hex = /^(?:[0-9a-f-]+|[0-9A-F-]+)$/.test(rest);
+    // Mixed-case hex is only treated as hex for UUIDs; otherwise it is likely base62 (e.g. "toolu_01AbCdEf").
+    const hex = UUID.test(rest) || /^(?:[0-9a-f-]+|[0-9A-F-]+)$/.test(rest);
     const hexDigits = "0123456789abcdef";
     let body = rest.replace(/[0-9a-zA-Z]/g, (ch) => {
       const n = next();

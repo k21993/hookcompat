@@ -50,7 +50,9 @@ function fire(event, extra) {
 }
 
 fire("SessionStart", { source: "startup" });
-fire("UserPromptSubmit", { prompt: values.prompt });
+// Test switches, set through the prompt text.
+const huge = values.prompt.includes("fake:huge");
+fire("UserPromptSubmit", { prompt: huge ? "x".repeat(9 * 1024 * 1024) : values.prompt });
 
 const toolInput = { command: `echo hookcompat > ${values.marker}`, description: "Write marker" };
 const pre = fire("PreToolUse", { tool_name: "Bash", tool_input: toolInput, tool_use_id: "toolu_01AbCdEfGhIjKlMnOpQrStUv" });
@@ -67,3 +69,4 @@ if (!denied) {
   });
 }
 fire("Stop", { stop_hook_active: false });
+if (values.prompt.includes("fake:sigterm")) process.kill(process.pid, "SIGTERM");

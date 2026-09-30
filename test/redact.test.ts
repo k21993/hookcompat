@@ -44,6 +44,12 @@ describe("redaction", () => {
     }
   });
 
+  it("keeps a mixed-case UUID valid", () => {
+    const original = "3F2B8C1E-9a4d-4E2F-8b7a-1C2D3E4F5A6B";
+    const fake = (redactor.redact({ session_id: original }).value as { session_id: string }).session_id;
+    expect(fake).toMatch(new RegExp(VALID_UUID.source, "i"));
+  });
+
   it("leaves other values untouched", () => {
     expect(redactor.redact({ tool_input: { command: "echo hi" }, n: 3 }).value).toEqual({ tool_input: { command: "echo hi" }, n: 3 });
   });

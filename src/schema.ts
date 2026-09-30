@@ -65,9 +65,12 @@ export const CaptureFixture = z.object({
   event: z.string(),
   receivedAt: z.string(),
   runId: z.string(),
-  payload: z.unknown(),
+  /** Absent when stdin was not valid JSON; see rawStdin. */
+  payload: z.unknown().optional(),
   /** Set when stdin was not valid JSON; the redacted raw text. */
   rawStdin: z.string().optional(),
+  /** The hook input was larger than the capture limit and was cut off. */
+  stdinTruncated: z.boolean(),
   redactions: z.array(z.string()),
   review: z.object({
     status: z.enum(["unreviewed", "reviewed"]),
