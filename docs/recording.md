@@ -36,5 +36,13 @@ If a flag the adapters pass is wrong for your CLI version, adjust without code c
 ## Safety
 
 - The CLI runs in a throwaway HOME and git repo. Only `PATH`, locale variables and the named credential variables are passed through.
+- `--cli-version` installs run npm with only `PATH` and proxy/CA variables, so install scripts never see credentials. An install that fails or takes over 5 minutes ends the run as `install-failed`.
 - Output is redacted (sandbox paths, your home directory, session and tool IDs), then scanned. If anything still looks like a secret, **nothing is written**.
 - Captures are not committed to `main`. They go through review first.
+
+## Platform
+
+Linux only for now. Two known gaps before other platforms:
+
+- `runBounded` kills timed-out runs by process group (`kill(-pid)`), which Windows lacks.
+- `onPath` finds the CLI with `sh -c "command -v"`.

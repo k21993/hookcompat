@@ -5,10 +5,18 @@ import { join } from "node:path";
 import { createRedactor, RedactionError } from "../redact.js";
 import { CaptureContext, CaptureFixture, EvidenceLine, type Scenario } from "../schema.js";
 import { createSandbox, sandboxEnv } from "./sandbox.js";
+import { InstallError } from "./adapters/common.js";
 import type { HarnessAdapter, HookRegistration } from "./adapters/types.js";
 
 /** Anything other than "ok" means the captures must not be used as compatibility evidence. */
-export type RecordStatus = "ok" | "no-captures" | "incomplete" | "cli-failed" | "timeout" | "redaction-failed";
+export type RecordStatus =
+  | "ok"
+  | "install-failed"
+  | "no-captures"
+  | "incomplete"
+  | "cli-failed"
+  | "timeout"
+  | "redaction-failed";
 
 export interface RecordOptions {
   adapter: HarnessAdapter;
@@ -47,7 +55,14 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
     const hooks: HookRegistration[] = scenario.capture_events.map((event) => ({ event, command }));
     const config = adapter.writeHookConfig(sb, hooks);
 
-    const cli = await adapter.resolve(sb, opts.cliVersion);
+    let cli: string[];
+    try {
+      cli = await adapter.resolve(sb, opts.cliVersion);
+    } catch (err) {
+      if (!(err instanceof InstallError)) throw err;
+      const cliVersion = opts.cliVersion ?? "unknown";
+      return { status: "install-failed", runId, cliVersion, eventsCaptured: [], markerCreated: false, message: err.message };
+    }
     const cliVersion = await adapter.version(cli, sb, env);
     const prompt = scenario.prompt.replaceAll("{{marker}}", sb.marker);
 

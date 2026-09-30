@@ -5,12 +5,31 @@ import type { Sandbox } from "../sandbox.js";
 import type { HookEvent } from "../../schema.js";
 import type { HookRegistration } from "./types.js";
 
-/** Installs `<pkg>@<version>` into the sandbox and returns the path of its bin. */
-export function installFromNpm(sb: Sandbox, pkg: string, version: string, bin: string): string[] {
+export class InstallError extends Error {}
+
+/** npm gets only what it needs to reach the registry, so install scripts never see API keys or other secrets. */
+const NPM_ENV = ["PATH", "HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy", "NO_PROXY", "no_proxy", "NODE_EXTRA_CA_CERTS", "SSL_CERT_FILE", "npm_config_registry"];
+const INSTALL_TIMEOUT_MS = 5 * 60_000;
+
+/**
+ * Installs `<pkg>@<version>` into the sandbox and returns the path of its bin.
+ * Install scripts stay on: Claude Code's postinstall fetches its native binary.
+ */
+export async function installFromNpm(sb: Sandbox, pkg: string, version: string, bin: string): Promise<string[]> {
   const prefix = join(sb.root, "cli");
-  execFileSync("npm", ["install", "--silent", "--no-audit", "--no-fund", "--prefix", prefix, `${pkg}@${version}`], {
-    stdio: ["ignore", "ignore", "inherit"],
+  const env: NodeJS.ProcessEnv = { HOME: sb.home };
+  for (const name of NPM_ENV) if (process.env[name] !== undefined) env[name] = process.env[name];
+  const res = await runBounded({
+    argv: ["npm", "install", "--no-audit", "--no-fund", "--prefix", prefix, `${pkg}@${version}`],
+    cwd: sb.root,
+    env,
+    timeoutMs: INSTALL_TIMEOUT_MS,
+    maxOutputBytes: 1024 * 1024,
   });
+  if (res.timedOut) throw new InstallError(`npm install ${pkg}@${version} timed out`);
+  if (res.exitCode !== 0) {
+    throw new InstallError(`npm install ${pkg}@${version} failed: ${res.launchError ?? res.stderr.slice(-2000)}`);
+  }
   return [join(prefix, "node_modules", ".bin", bin)];
 }
 
