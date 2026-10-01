@@ -27,7 +27,8 @@ jobs:
         run: npm run build:action && git diff --exit-code action/
 
   action:
-    # Runs the Action on the example, which must fail on Claude Code 2.1.63.
+    # Runs the Action on the example: the broken hook must fail on Claude Code 2.1.63,
+    # and the fixed hook must pass, so a crash or config error cannot look like a catch.
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -39,3 +40,6 @@ jobs:
           config: examples/consumer/hookcompat.yml
       - if: steps.replay.outcome != 'failure'
         run: echo "expected the example to fail on Claude Code 2.1.63" && exit 1
+      - uses: ./
+        with:
+          config: examples/consumer/hookcompat.fixed.yml

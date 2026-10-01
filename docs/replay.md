@@ -19,11 +19,11 @@ cases:
     config: hookcompat.yml
 ```
 
-For each case and version, the Action takes the first reviewed capture of the event (default `PreToolUse`), finds the hooks whose matcher matches its `tool_name`, runs them with the payload on stdin, and decodes the result. Unreviewed captures are skipped and counted. See `examples/consumer/` for a hook that checks `tool_name` for `Task` and so stops blocking on 2.1.63, where the tool is `Agent`.
+For each case and version, the Action takes the first capture of the event (default `PreToolUse`) in recording order, finds the hooks whose matcher matches its `tool_name`, runs them with the payload on stdin, and decodes the result. That capture must be reviewed; if it is not, the case is skipped and counted, and later captures are not tried, since they may be a different tool call. See `examples/consumer/` for a hook that checks `tool_name` for `Task` and so stops blocking on 2.1.63, where the tool is `Agent`.
 
 ## Results
 
-Decisions are `allow`, `deny`, `ask`, `defer`, `no-opinion` (exit 0, no decision) and `error`. `no-opinion (no hook matched)` means no matcher matched the recorded `tool_name`. Matchers follow the docs plus known aliases: `Task` still matches `Agent` (anthropics/claude-code#29677).
+Decisions are `allow`, `deny`, `ask`, `defer`, `no-opinion` (exit 0, no decision) and `error`. `no-opinion (no hook matched)` means no matcher matched the recorded `tool_name`. Matchers follow the docs, plus one known alias: the exact matcher `Task` still matches `Agent` (anthropics/claude-code#29677). Regex matchers are not given the alias.
 
 The run fails if any case fails, if no reviewed fixture matches, or if no case was executed.
 

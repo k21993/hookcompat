@@ -30,10 +30,11 @@ const PERMISSION_DECISIONS = new Set(["allow", "deny", "ask", "defer"]);
 const LEGACY = { approve: "allow", block: "deny" } as const;
 
 /**
- * Older names a matcher can still use for a renamed tool.
- * anthropics/claude-code#29677: after the Task to Agent rename, "Task" in settings still matches the Agent tool.
+ * Exact matchers that still select a renamed tool.
+ * anthropics/claude-code#29677: after the Task to Agent rename, matcher "Task" still matches the Agent tool.
+ * Only the exact old name is covered; whether regexes like "T.*" also match is unverified.
  */
-const MATCHER_ALIASES: Record<string, string[]> = { Agent: ["Task"] };
+const EXACT_ALIASES: Record<string, string> = { Task: "Agent" };
 
 /**
  * Docs: "*", "" or a missing matcher matches every tool; otherwise the matcher is a tool name
@@ -41,8 +42,8 @@ const MATCHER_ALIASES: Record<string, string[]> = { Agent: ["Task"] };
  */
 export function matches(matcher: string | undefined, toolName: string): boolean {
   if (matcher === undefined || matcher === "" || matcher === "*") return true;
-  const re = new RegExp(`^(?:${matcher})$`);
-  return [toolName, ...(MATCHER_ALIASES[toolName] ?? [])].some((name) => re.test(name));
+  if (EXACT_ALIASES[matcher] === toolName) return true;
+  return new RegExp(`^(?:${matcher})$`).test(toolName);
 }
 
 /** The command hooks Claude Code would run for this PreToolUse call, from a settings.json object. */

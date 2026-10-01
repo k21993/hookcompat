@@ -29,6 +29,11 @@ describe("replay", () => {
     ]);
   });
 
+  it("passes the fixed example on both versions", async () => {
+    const report = await replay(EXAMPLE.replace("hookcompat.yml", "hookcompat.fixed.yml"), DATA);
+    expect(report).toMatchObject({ ok: true, executed: 2, passed: 2 });
+  });
+
   it("passes a hook selected by a Task matcher on both versions", async () => {
     expect(await replay(project(CASE, "Task"), DATA)).toMatchObject({ ok: true, executed: 2, passed: 2 });
   });

@@ -1,0 +1,6 @@
+# The same check with a hook that handles both names. Passes on every version.
+harness: claude-code
+settings: .claude/settings.fixed.json
+cases:
+  - scenario: pretooluse-subagent
+    expect: deny

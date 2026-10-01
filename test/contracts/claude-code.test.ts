@@ -54,5 +54,8 @@ describe("Claude Code matchers", () => {
   it("still match the renamed subagent tool by its old name", () => {
     // anthropics/claude-code#29677: "Task" in settings still matches the Agent tool.
     expect(matches("Task", "Agent")).toBe(true);
+    // Not covered by the issue, so not assumed.
+    expect(matches("T.*", "Agent")).toBe(false);
+    expect(matches("Task|Bash", "Agent")).toBe(false);
   });
 });
