@@ -88,6 +88,9 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
         { from: sb.repo.replace(/[^A-Za-z0-9]/g, "-"), to: "-hookcompat-repo" },
         { from: sb.home, to: "/hookcompat/home" },
         { from: sb.root, to: "/hookcompat/sandbox" },
+        // Claude Code writes subagent output under /tmp/claude-<uid> whatever TMPDIR says (/private/tmp on macOS).
+        { from: `/private/tmp/claude-${process.getuid?.()}`, to: "/hookcompat/claude-tmp" },
+        { from: `/tmp/claude-${process.getuid?.()}`, to: "/hookcompat/claude-tmp" },
         { from: homedir(), to: "/hookcompat/user-home" },
       ],
       secrets,

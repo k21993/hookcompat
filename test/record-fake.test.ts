@@ -103,6 +103,15 @@ describe("recorder pipeline with a fake CLI", () => {
     }
   });
 
+  it("redacts Claude Code's per-user temp directory", async () => {
+    const out = mkdtempSync(join(tmpdir(), "hookcompat-out-"));
+    const tmp = `/private/tmp/claude-${process.getuid!()}/-repo/tasks/a.output`;
+    const s = Scenario.parse({ ...scenario("allow"), id: "claude-tmp", prompt: `write {{marker}} ${tmp}` });
+    const res = await record({ adapter: fakeAdapter, scenario: s, outDir: out, timeoutMs: 30_000 });
+    const prompt = readdirSync(res.runDir!).find((f) => f.includes("-UserPromptSubmit-"))!;
+    expect(JSON.parse(readFileSync(join(res.runDir!, prompt), "utf8")).payload.prompt).toContain("/hookcompat/claude-tmp/-repo/tasks/a.output");
+  });
+
   it("writes nothing when a secret would leak", async () => {
     process.env.HOOKCOMPAT_FAKE_KEY = "fake-user-home-secret-value";
     const out = mkdtempSync(join(tmpdir(), "hookcompat-out-"));
