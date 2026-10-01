@@ -12,7 +12,9 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "record": "tsx src/recorder/cli.ts"
+    "record": "tsx src/recorder/cli.ts",
+    "replay": "tsx src/action.ts",
+    "build:action": "esbuild src/action.ts --bundle --minify --platform=node --target=node24 --format=esm --outfile=action/index.mjs \"--banner:js=import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\""
   },
   "dependencies": {
     "yaml": "^2.9.1",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
+    "esbuild": "^0.28.2",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.0.3"
