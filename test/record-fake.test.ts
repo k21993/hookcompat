@@ -38,6 +38,9 @@ describe("recorder pipeline with a fake CLI", () => {
 
     const recording = JSON.parse(readFileSync(join(res.runDir!, "recording.json"), "utf8"));
     expect(recording.context.config.content).toContain("/hookcompat/sandbox/bin/capture.mjs");
+    // Raw CLI output is not published, only its size and hash.
+    expect(recording.run.stdoutTail).toBeUndefined();
+    expect(recording.run.stdout).toMatchObject({ bytes: expect.any(Number), sha256: expect.stringMatching(/^[0-9a-f]{64}$/) });
     expect(recording.context.config.content).not.toContain(tmpdir() + "/hookcompat-");
     expect(recording.context.model).toBe("fake-model-1");
     expect(recording.context.envAllowlist).toContain("HOOKCOMPAT_FAKE_KEY");
@@ -103,9 +106,9 @@ describe("recorder pipeline with a fake CLI", () => {
     }
   });
 
-  it("redacts Claude Code's per-user temp directory", async () => {
+  it.each(["/private/tmp", "/tmp"])("redacts Claude Code's per-user temp directory under %s", async (base) => {
     const out = mkdtempSync(join(tmpdir(), "hookcompat-out-"));
-    const tmp = `/private/tmp/claude-${process.getuid!()}/-repo/tasks/a.output`;
+    const tmp = `${base}/claude-${process.getuid!()}/-repo/tasks/a.output`;
     const s = Scenario.parse({ ...scenario("allow"), id: "claude-tmp", prompt: `write {{marker}} ${tmp}` });
     const res = await record({ adapter: fakeAdapter, scenario: s, outDir: out, timeoutMs: 30_000 });
     const prompt = readdirSync(res.runDir!).find((f) => f.includes("-UserPromptSubmit-"))!;

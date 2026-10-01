@@ -33,6 +33,14 @@ describe("redaction", () => {
     expect(v.tool_use_id).toMatch(/^toolu_[0-9][0-9][A-Z][a-z][A-Z][a-z][A-Z][a-z]$/);
   });
 
+  it("replaces subagent IDs, including inside tool responses", () => {
+    const { value } = redactor.redact({ agent_id: "a9d33a10754ed4529", tool_response: { agentId: "a9d33a10754ed4529" } });
+    const v = value as { agent_id: string; tool_response: { agentId: string } };
+    expect(v.agent_id).not.toBe("a9d33a10754ed4529");
+    expect(v.agent_id).toMatch(/^[0-9a-f]{17}$/);
+    expect(v.tool_response.agentId).toBe(v.agent_id);
+  });
+
   it("keeps UUIDs valid, with the same version and variant", () => {
     for (let i = 0; i < 200; i++) {
       const original = randomUUID();

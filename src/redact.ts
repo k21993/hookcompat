@@ -8,11 +8,11 @@ export interface PathReplacement {
 }
 
 /** Fields whose values identify a session or call. They are replaced with fake values of the same shape. */
-const ID_FIELDS = new Set(["session_id", "turn_id", "tool_use_id", "prompt_id", "call_id"]);
+const ID_FIELDS = new Set(["session_id", "turn_id", "tool_use_id", "prompt_id", "call_id", "agent_id", "agentId"]);
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-const SECRET_PATTERNS: [string, RegExp][] = [
+export const SECRET_PATTERNS: [string, RegExp][] = [
   ["anthropic-key", /sk-ant-[A-Za-z0-9_-]{10,}/],
   ["openai-key", /\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}/],
   ["github-token", /\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{30,}/],
