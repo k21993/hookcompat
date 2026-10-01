@@ -49,6 +49,8 @@ export interface ReplayReport {
   passed: number;
   failed: number;
   unsupported: number;
+  /** Matching fixtures skipped because nobody has reviewed them. */
+  unreviewed: number;
   ok: boolean;
   /** Set when the run fails without a failing case. */
   error?: string;
@@ -63,11 +65,18 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
   const projectDir = dirname(resolve(configPath));
   const settings = JSON.parse(readFileSync(join(projectDir, config.settings), "utf8"));
   const results: CaseResult[] = [];
+  let unreviewed = 0;
 
   for (const c of config.cases) {
     const expected = Array.isArray(c.expect) ? c.expect : [c.expect];
     for (const { version, path } of findFixtures(dataDir, config.harness, c.scenario, c.event, c.versions)) {
       const raw = readFileSync(path, "utf8");
+      const fixture = CaptureFixture.parse(JSON.parse(raw));
+      // Only captures a person has checked count as evidence.
+      if (fixture.review.status !== "reviewed") {
+        unreviewed++;
+        continue;
+      }
       const base = {
         scenario: c.scenario,
         version,
@@ -79,7 +88,7 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
         results.push({ ...base, status: "unsupported", detail: `${config.harness} ${c.event} is not supported yet` });
         continue;
       }
-      const payload = CaptureFixture.parse(JSON.parse(raw)).payload as { tool_name?: string };
+      const payload = fixture.payload as { tool_name?: string };
       const toolName = payload?.tool_name ?? "";
       const { hooks, unsupported } = hooksFor(settings, toolName);
       if (unsupported.length > 0) {
@@ -112,11 +121,12 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
     passed: count("pass"),
     failed: count("fail"),
     unsupported: count("unsupported"),
+    unreviewed,
     ok: false,
     results,
   };
   // Zero executed cases is never green.
-  if (results.length === 0) report.error = "no matching fixtures";
+  if (results.length === 0) report.error = unreviewed ? `no reviewed fixtures (${unreviewed} unreviewed skipped)` : "no matching fixtures";
   else if (executed === 0) report.error = "no case was executed";
   report.ok = !report.error && report.failed === 0;
   return report;
@@ -154,7 +164,7 @@ export function summary(report: ReplayReport): string {
   const lines = [
     `## hookcompat: ${report.ok ? "passed" : "failed"}`,
     "",
-    `${report.harness}: ${report.selected} selected, ${report.executed} executed, ${report.passed} passed, ${report.failed} failed, ${report.unsupported} unsupported`,
+    `${report.harness}: ${report.selected} selected, ${report.executed} executed, ${report.passed} passed, ${report.failed} failed, ${report.unsupported} unsupported, ${report.unreviewed} unreviewed skipped`,
   ];
   if (report.error) lines.push("", `**${report.error}**`);
   if (report.results.length > 0) {

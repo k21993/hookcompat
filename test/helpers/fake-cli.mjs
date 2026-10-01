@@ -33,8 +33,9 @@ const common = {
   transcript_path: join(process.env.HOME, ".claude", "projects", cwd.replace(/[^A-Za-z0-9]/g, "-"), `${sessionId}.jsonl`),
   cwd,
   permission_mode: "default",
-  model: "fake-model-1",
 };
+// Like Claude Code: the model is in the stream-json output, not in hook payloads.
+console.log(JSON.stringify({ type: "system", subtype: "init", model: "fake-model-1" }));
 
 function fire(event, extra) {
   const outputs = [];

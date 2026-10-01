@@ -46,8 +46,13 @@ describe("Claude Code PreToolUse decode", () => {
 describe("Claude Code matchers", () => {
   it("match tool names exactly or by alternation", () => {
     // Docs: matcher is a tool name or a regex like "Edit|Write"; "*" matches all tools.
-    expect(matches("Task", "Agent")).toBe(false);
-    expect(matches("Task|Agent", "Agent")).toBe(true);
+    expect(matches("Bash", "Edit")).toBe(false);
+    expect(matches("Edit|Write", "Write")).toBe(true);
     expect(matches("*", "Agent")).toBe(true);
+  });
+
+  it("still match the renamed subagent tool by its old name", () => {
+    // anthropics/claude-code#29677: "Task" in settings still matches the Agent tool.
+    expect(matches("Task", "Agent")).toBe(true);
   });
 });

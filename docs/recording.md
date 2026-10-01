@@ -44,6 +44,8 @@ npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenario
 
 Expected: a PreToolUse capture with `tool_name: "Task"` on 2.1.62 and `"Agent"` on 2.1.63.
 
+Claude Code hook payloads carry no model, so the recorder reads it from the CLI's stream-json output. The 2.1.62 and 2.1.63 fixtures were recorded before that and show `model: "unknown"`; their `run.stdoutTail` shows `claude-sonnet-4-6`.
+
 ## Safety
 
 - The CLI runs in a throwaway HOME and git repo. Only `PATH`, locale variables and the named credential variables are passed through.
