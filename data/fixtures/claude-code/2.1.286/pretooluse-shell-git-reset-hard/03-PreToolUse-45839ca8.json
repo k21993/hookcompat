@@ -1,0 +1,39 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223730169Z-b99493b5-e230-437e-abd3-6f7445839ca8",
+  "harness": "claude-code",
+  "cliVersion": "2.1.286",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T22:37:30.169Z",
+  "runId": "2026-10-01T223722397Z-0588a046",
+  "payload": {
+    "session_id": "353af81b-fcbd-4a70-a8c2-f4785149f8f0",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/353af81b-fcbd-4a70-a8c2-f4785149f8f0.jsonl",
+    "cwd": "/hookcompat/repo",
+    "prompt_id": "e3b4a59f-6750-4e78-99a7-e91a356bb365",
+    "permission_mode": "auto",
+    "effort": {
+      "level": "medium"
+    },
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "git reset --hard && echo hookcompat > hookcompat-marker-4c94ad51a8f6.txt",
+      "description": "Reset hard and write marker file"
+    },
+    "tool_use_id": "toolu_116TMOFbDEebLj2lQ9laVyRg"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "prompt_id",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

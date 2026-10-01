@@ -1,0 +1,28 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223718526Z-9a3a0bbf-b741-49eb-b90d-41e1c90f7a53",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-shell-write",
+  "event": "UserPromptSubmit",
+  "receivedAt": "2026-10-01T22:37:18.526Z",
+  "runId": "2026-10-01T223715631Z-2350211d",
+  "payload": {
+    "session_id": "581d6a0a-a03b-4604-ae04-5c84709f1f3c",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/581d6a0a-a03b-4604-ae04-5c84709f1f3c.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-9a54cb4ef1f9.txt"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

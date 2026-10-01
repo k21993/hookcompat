@@ -1,0 +1,34 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223654240Z-9d2d93e9-7241-4bdc-9474-b7ce240d7686",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-shell-write",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T22:36:54.240Z",
+  "runId": "2026-10-01T223649196Z-eef54210",
+  "payload": {
+    "session_id": "3b67839a-c943-4e37-a361-92fadbb10c19",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/3b67839a-c943-4e37-a361-92fadbb10c19.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo hookcompat > hookcompat-marker-de0a2de0cd76.txt",
+      "description": "Run the specified echo command"
+    },
+    "tool_use_id": "toolu_342uixPBu4PROpbNMWpRBS75"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223733095Z-66247303-cdd9-4e34-9a46-6e3fa692436f",
+  "harness": "claude-code",
+  "cliVersion": "2.1.286",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T22:37:33.095Z",
+  "runId": "2026-10-01T223722397Z-0588a046",
+  "payload": {
+    "session_id": "353af81b-fcbd-4a70-a8c2-f4785149f8f0",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/353af81b-fcbd-4a70-a8c2-f4785149f8f0.jsonl",
+    "cwd": "/hookcompat/repo",
+    "prompt_id": "e3b4a59f-6750-4e78-99a7-e91a356bb365",
+    "permission_mode": "auto",
+    "effort": {
+      "level": "medium"
+    },
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The command didn't run. A PreToolUse hook blocked it with the error \"hookcompat reference hook\". I haven't retried or tried a workaround, since the hook's block counts as your feedback.",
+    "background_tasks": [],
+    "session_crons": []
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "prompt_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

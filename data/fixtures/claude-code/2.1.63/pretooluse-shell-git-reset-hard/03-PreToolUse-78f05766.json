@@ -1,0 +1,34 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223711007Z-fe6d92c1-afc0-4214-a524-489478f05766",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T22:37:11.007Z",
+  "runId": "2026-10-01T223657851Z-bb5772c9",
+  "payload": {
+    "session_id": "b4a56ea8-21f8-4df5-a23e-75e03a317d71",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/b4a56ea8-21f8-4df5-a23e-75e03a317d71.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "git reset --hard && echo hookcompat > hookcompat-marker-5b31fe79050e.txt",
+      "description": "Run the specified command: git reset --hard and create marker file"
+    },
+    "tool_use_id": "toolu_25XaOZ5hvnuAHM3VxNhPjpnF"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

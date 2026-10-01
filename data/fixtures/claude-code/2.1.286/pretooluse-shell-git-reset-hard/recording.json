@@ -1,0 +1,99 @@
+{
+  "status": "ok",
+  "context": {
+    "runId": "2026-10-01T223722397Z-0588a046",
+    "capturedAt": "2026-10-01T22:37:33.488Z",
+    "harness": "claude-code",
+    "cliVersion": "2.1.286",
+    "model": "claude-sonnet-5-5",
+    "argv": [
+      "/hookcompat/sandbox/cli/node_modules/.bin/claude",
+      "-p",
+      "Run exactly this shell command and nothing else, then stop: git reset --hard && echo hookcompat > hookcompat-marker-4c94ad51a8f6.txt",
+      "--settings",
+      "/hookcompat/sandbox/claude-settings.json",
+      "--max-turns",
+      "3",
+      "--allowedTools",
+      "Bash",
+      "--output-format",
+      "stream-json",
+      "--verbose",
+      "--debug-file",
+      "/hookcompat/sandbox/logs/claude-debug.log"
+    ],
+    "os": "darwin-arm64",
+    "node": "v26.10.0",
+    "config": {
+      "path": "/hookcompat/sandbox/claude-settings.json",
+      "content": "{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "sha256": "e53185f710e48bc11c92eeef28bc94260f66bfeceb75b7efee765a992479eb5c"
+    },
+    "envAllowlist": [
+      "PATH",
+      "LANG",
+      "LC_ALL",
+      "TERM",
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_OAUTH_TOKEN"
+    ]
+  },
+  "scenario": {
+    "id": "pretooluse-shell-git-reset-hard",
+    "intent": "The agent is asked to run a destructive git command. The capture hook denies PreToolUse, so the command never runs and the marker must not be created.",
+    "prompt": "Run exactly this shell command and nothing else, then stop: git reset --hard && echo hookcompat > {{marker}}",
+    "capture_events": [
+      "SessionStart",
+      "UserPromptSubmit",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "files": {},
+    "respond": {
+      "PreToolUse": "deny"
+    }
+  },
+  "marker": "hookcompat-marker-4c94ad51a8f6.txt",
+  "markerCreated": false,
+  "evidence": [
+    {
+      "invocationId": "2026-10-01T223728311Z-9b161c94-46ac-47bb-b626-25dbbef21933",
+      "receivedAt": "2026-10-01T22:37:28.311Z",
+      "event": "SessionStart",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T223728414Z-b01dc24d-deb0-4e74-924c-34d51d991d5b",
+      "receivedAt": "2026-10-01T22:37:28.414Z",
+      "event": "UserPromptSubmit",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T223730169Z-b99493b5-e230-437e-abd3-6f7445839ca8",
+      "receivedAt": "2026-10-01T22:37:30.169Z",
+      "event": "PreToolUse",
+      "tool": "Bash",
+      "responded": "deny"
+    },
+    {
+      "invocationId": "2026-10-01T223733095Z-66247303-cdd9-4e34-9a46-6e3fa692436f",
+      "receivedAt": "2026-10-01T22:37:33.095Z",
+      "event": "Stop",
+      "responded": "none"
+    }
+  ],
+  "run": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 9067,
+      "sha256": "c52d18f03dcb2578784843468ba1798f4909b57eb2e44de08079733b18fbe26c"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

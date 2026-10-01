@@ -1,0 +1,29 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223715023Z-4e07efad-72b1-4e5e-ab98-9c9c4c4e836d",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T22:37:15.023Z",
+  "runId": "2026-10-01T223657851Z-bb5772c9",
+  "payload": {
+    "session_id": "b4a56ea8-21f8-4df5-a23e-75e03a317d71",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/b4a56ea8-21f8-4df5-a23e-75e03a317d71.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The command was blocked by a `PreToolUse:Bash` hook (`hookcompat reference hook`). I'm unable to execute it — the hook is intercepting all Bash tool calls in this environment.\n\nYou may need to check your hooks configuration to allow this command to run."
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}
