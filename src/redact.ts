@@ -43,6 +43,8 @@ export function createRedactor(paths: PathReplacement[], secrets: string[], salt
   const redactText = (text: string): string => {
     let result = text;
     for (const { from, to } of ordered) result = result.split(from).join(to);
+    // IDs also appear inside other strings, e.g. a transcript file named after the session ID.
+    for (const [original, fake] of idMap) result = result.split(original).join(fake);
     return result;
   };
 
@@ -94,8 +96,18 @@ export function createRedactor(paths: PathReplacement[], secrets: string[], salt
     return value;
   };
 
+  const collectIds = (value: unknown, key: string): void => {
+    if (typeof value === "string") {
+      if (ID_FIELDS.has(key)) fakeId(value);
+    } else if (Array.isArray(value)) value.forEach((v) => collectIds(v, key));
+    else if (value !== null && typeof value === "object") {
+      for (const [k, v] of Object.entries(value)) collectIds(v, k);
+    }
+  };
+
   return {
     redact(value) {
+      collectIds(value, "");
       const redactions: string[] = [];
       const redacted = walk(value, "", redactions);
       return { value: redacted, redactions };

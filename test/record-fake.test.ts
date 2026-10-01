@@ -33,6 +33,7 @@ describe("recorder pipeline with a fake CLI", () => {
     const payload = pre.payload as Record<string, unknown>;
     expect(payload.cwd).toBe("/hookcompat/repo");
     expect(payload.session_id).not.toBe("3f2b8c1e-9a4d-4e2f-8b7a-1c2d3e4f5a6b");
+    expect(payload.transcript_path).toBe(`/hookcompat/home/.claude/projects/-hookcompat-repo/${payload.session_id}.jsonl`);
     expect(pre.review.status).toBe("unreviewed");
 
     const recording = JSON.parse(readFileSync(join(res.runDir!, "recording.json"), "utf8"));

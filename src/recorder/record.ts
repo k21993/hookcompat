@@ -78,6 +78,8 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
     const redactor = createRedactor(
       [
         { from: sb.repo, to: "/hookcompat/repo" },
+        // Claude Code names its per-project directory after the cwd with every non-alphanumeric character replaced by "-".
+        { from: sb.repo.replace(/[^A-Za-z0-9]/g, "-"), to: "-hookcompat-repo" },
         { from: sb.home, to: "/hookcompat/home" },
         { from: sb.root, to: "/hookcompat/sandbox" },
         { from: homedir(), to: "/hookcompat/user-home" },
