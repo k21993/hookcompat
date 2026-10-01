@@ -1,0 +1,29 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T200358030Z-4abb677c-e3b4-4116-ad0e-9867420ab73d",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T20:03:58.030Z",
+  "runId": "2026-10-01T200345005Z-475ba128",
+  "payload": {
+    "session_id": "0aa94a63-5f68-4a0b-9d90-d9c7bc8d91a0",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/0aa94a63-5f68-4a0b-9d90-d9c7bc8d91a0.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The command was executed successfully. The file `hookcompat-marker-fd6045d172a5.txt` was created with the content `hookcompat`."
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

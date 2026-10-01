@@ -1,0 +1,41 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T201215891Z-c8ac07fb-dc5c-4860-b620-70f5f16603ae",
+  "harness": "claude-code",
+  "cliVersion": "2.1.286",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T20:12:15.891Z",
+  "runId": "2026-10-01T201205990Z-0daae143",
+  "payload": {
+    "session_id": "e57be3ea-423b-4a80-854f-2a70bedfecb6",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/e57be3ea-423b-4a80-854f-2a70bedfecb6.jsonl",
+    "cwd": "/hookcompat/repo",
+    "prompt_id": "8f3215af-757c-4e4e-a7ce-0ea6ace70869",
+    "permission_mode": "auto",
+    "agent_id": "a2eb4069b3a570d68",
+    "agent_type": "trellis-research",
+    "effort": {
+      "level": "medium"
+    },
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo hookcompat > hookcompat-marker-4303b475316e.txt",
+      "description": "Write marker file"
+    },
+    "tool_use_id": "toolu_65VWod0cIklmQM6N1XiAzv9f"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "prompt_id",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

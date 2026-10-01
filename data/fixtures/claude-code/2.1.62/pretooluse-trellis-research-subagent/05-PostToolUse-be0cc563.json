@@ -1,0 +1,42 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T200341480Z-0131bfbd-6325-4fb2-98b5-60fabe0cc563",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "PostToolUse",
+  "receivedAt": "2026-10-01T20:03:41.480Z",
+  "runId": "2026-10-01T200333954Z-49fd8194",
+  "payload": {
+    "session_id": "99e94180-97b4-43e5-a86d-a1de02966022",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/99e94180-97b4-43e5-a86d-a1de02966022.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo hookcompat > /hookcompat/repo/hookcompat-marker-b1daa9524c56.txt",
+      "description": "Write \"hookcompat\" to the marker file"
+    },
+    "tool_response": {
+      "stdout": "",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false,
+      "noOutputExpected": false
+    },
+    "tool_use_id": "toolu_61PVki35qgJTJ9WrfhyDfZWS"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_input.command",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}
