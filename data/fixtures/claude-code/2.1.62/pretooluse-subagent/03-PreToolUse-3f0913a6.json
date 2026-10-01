@@ -31,7 +31,7 @@
   ],
   "review": {
     "status": "reviewed",
-    "by": "OpenAI Codex (AI-assisted review)",
+    "by": "k21993",
     "at": "2026-10-01T06:06:53Z",
     "note": "Reviewed for schema validity, internal consistency, redaction, and agreement with recording evidence. Raw unredacted stdin was not independently observed."
   }
