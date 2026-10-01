@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve, sep } from "node:path";
 import { createRedactor, RedactionError } from "../redact.js";
 import { CaptureContext, CaptureFixture, EvidenceLine, type Scenario } from "../schema.js";
 import { createSandbox, sandboxEnv } from "./sandbox.js";
@@ -48,8 +48,10 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
   const sb = createSandbox();
   try {
     for (const [path, content] of Object.entries(scenario.files)) {
-      mkdirSync(dirname(join(sb.repo, path)), { recursive: true });
-      writeFileSync(join(sb.repo, path), content);
+      const target = resolve(sb.repo, path);
+      if (!target.startsWith(sb.repo + sep)) throw new Error(`scenario file ${path} must be inside the sandbox repo`);
+      mkdirSync(dirname(target), { recursive: true });
+      writeFileSync(target, content);
     }
     const { env, allowlist } = sandboxEnv(sb, adapter.credentialEnv);
 

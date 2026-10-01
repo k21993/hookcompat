@@ -1,3 +1,4 @@
+import { posix } from "node:path";
 import { z } from "zod";
 
 export const HarnessId = z.enum(["claude-code", "codex", "fake"]);
@@ -27,7 +28,10 @@ export const Scenario = z.object({
   /** Files written into the sandbox repo before the run, by relative path. */
   files: z
     .record(
-      z.string().refine((p) => !p.startsWith("/") && !p.split("/").includes(".."), "must be a relative path inside the repo"),
+      z.string().refine((p) => {
+        const n = posix.normalize(p);
+        return p !== "" && !posix.isAbsolute(p) && n !== "." && n !== ".." && !n.startsWith("../");
+      }, "must be a file path inside the repo"),
       z.string(),
     )
     .default({}),

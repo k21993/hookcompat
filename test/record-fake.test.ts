@@ -97,8 +97,10 @@ describe("recorder pipeline with a fake CLI", () => {
     expect(JSON.parse(readFileSync(join(res.runDir!, start), "utf8")).payload.repo_files).toContain(join(".claude", "agents", "research.md"));
   });
 
-  it("rejects scenario files outside the repo", () => {
-    expect(() => Scenario.parse({ ...scenario("allow"), files: { "../escape": "x" } })).toThrow();
+  it("rejects scenario file paths that are not a file inside the repo", () => {
+    for (const path of ["", ".", "../escape", "a/../../escape", "/etc/passwd"]) {
+      expect(() => Scenario.parse({ ...scenario("allow"), files: { [path]: "x" } }), path).toThrow();
+    }
   });
 
   it("writes nothing when a secret would leak", async () => {
