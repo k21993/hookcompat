@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [{ "type": "command", "command": "sh hooks/no-subagents-fixed.sh" }]
+      }
+    ]
+  }
+}

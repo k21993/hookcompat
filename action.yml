@@ -1,0 +1,9 @@
+name: hookcompat
+description: Replay your Claude Code hooks against real hook payloads recorded from each CLI version
+inputs:
+  config:
+    description: Path to hookcompat.yml
+    default: hookcompat.yml
+runs:
+  using: node24
+  main: action/index.mjs

@@ -139,7 +139,7 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
       capturedAt: new Date().toISOString(),
       harness: adapter.id,
       cliVersion,
-      model: modelFromCaptures(fixtures.map((f) => f.fixture.payload)) ?? opts.model ?? "unknown",
+      model: modelFromCaptures(fixtures.map((f) => f.fixture.payload)) ?? modelFromOutput(result.stdout) ?? opts.model ?? "unknown",
       argv: redactedArgv,
       os: `${process.platform}-${process.arch}`,
       node: process.version,
@@ -205,4 +205,9 @@ function modelFromCaptures(payloads: unknown[]): string | undefined {
     }
   }
   return undefined;
+}
+
+/** Claude Code hook payloads have no model; its stream-json output does. */
+function modelFromOutput(stdout: string): string | undefined {
+  return /"model"\s*:\s*"([^"]+)"/.exec(stdout)?.[1];
 }

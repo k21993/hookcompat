@@ -1,0 +1,11 @@
+# Replays the hooks in .claude/settings.json against recorded Claude Code hook payloads.
+name: hookcompat
+on: [pull_request]
+jobs:
+  hookcompat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: k21993/hookcompat@main
+        with:
+          config: hookcompat.yml

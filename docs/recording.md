@@ -35,7 +35,7 @@ If a flag the adapters pass is wrong for your CLI version, adjust without code c
 
 ## Known breakage: subagent tool rename (Claude Code 2.1.63)
 
-Claude Code 2.1.63 renamed the subagent tool from `Task` to `Agent` in hook payloads, without a changelog entry ([anthropics/claude-code#29677](https://github.com/anthropics/claude-code/issues/29677)). Hooks matching `Task` stopped firing. Record both sides:
+Claude Code 2.1.63 renamed the subagent tool from `Task` to `Agent` in hook payloads, without a changelog entry ([anthropics/claude-code#29677](https://github.com/anthropics/claude-code/issues/29677)). Hook scripts that checked `tool_name == "Task"` silently stopped enforcing; a settings matcher of `Task` still matched. Record both sides:
 
 ```sh
 npm run record -- --harness claude-code --cli-version 2.1.62 --scenario scenarios/pretooluse-subagent.yaml
@@ -43,6 +43,8 @@ npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenario
 ```
 
 Expected: a PreToolUse capture with `tool_name: "Task"` on 2.1.62 and `"Agent"` on 2.1.63.
+
+Claude Code hook payloads carry no model, so the recorder reads it from the CLI's stream-json output. The 2.1.62 and 2.1.63 fixtures were recorded before that and show `model: "unknown"`; their `run.stdoutTail` shows `claude-sonnet-4-6`.
 
 ## Safety
 

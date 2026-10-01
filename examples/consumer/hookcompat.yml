@@ -1,0 +1,5 @@
+harness: claude-code
+settings: .claude/settings.json
+cases:
+  - scenario: pretooluse-subagent
+    expect: deny
