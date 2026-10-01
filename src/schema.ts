@@ -24,6 +24,13 @@ export const Scenario = z.object({
   intent: z.string().min(1),
   prompt: z.string().includes("{{marker}}"),
   capture_events: z.array(HookEvent).min(1),
+  /** Files written into the sandbox repo before the run, by relative path. */
+  files: z
+    .record(
+      z.string().refine((p) => !p.startsWith("/") && !p.split("/").includes(".."), "must be a relative path inside the repo"),
+      z.string(),
+    )
+    .default({}),
   respond: z
     .object({
       PreToolUse: z.enum(["allow", "deny", "ask"]).optional(),

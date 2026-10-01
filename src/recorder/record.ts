@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { createRedactor, RedactionError } from "../redact.js";
 import { CaptureContext, CaptureFixture, EvidenceLine, type Scenario } from "../schema.js";
 import { createSandbox, sandboxEnv } from "./sandbox.js";
@@ -47,6 +47,10 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
   const runId = `${new Date().toISOString().replace(/[:.]/g, "")}-${randomUUID().slice(0, 8)}`;
   const sb = createSandbox();
   try {
+    for (const [path, content] of Object.entries(scenario.files)) {
+      mkdirSync(dirname(join(sb.repo, path)), { recursive: true });
+      writeFileSync(join(sb.repo, path), content);
+    }
     const { env, allowlist } = sandboxEnv(sb, adapter.credentialEnv);
 
     const respondPath = join(sb.root, "respond.json");
