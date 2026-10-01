@@ -7,7 +7,7 @@
 //        fake-cli.mjs --config <hooks.json> --marker <file> --prompt <text>
 
 import { execSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 
@@ -52,7 +52,8 @@ function fire(event, extra) {
   return outputs;
 }
 
-fire("SessionStart", { source: "startup" });
+// repo_files is fake-only, so tests can see what the sandbox repo contained.
+fire("SessionStart", { source: "startup", repo_files: readdirSync(cwd, { recursive: true }).sort() });
 // Test switches, set through the prompt text.
 const huge = values.prompt.includes("fake:huge");
 fire("UserPromptSubmit", { prompt: huge ? "x".repeat(9 * 1024 * 1024) : values.prompt });
