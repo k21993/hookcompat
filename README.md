@@ -46,12 +46,25 @@ The Action reads your matchers and hook commands from the settings file, runs th
 - Replay only uses fixtures marked `reviewed`. Unreviewed captures are skipped and counted.
 - Replay makes no model calls and needs no API keys.
 
+## Tested against
+
+[Trellis](https://github.com/mindfold-ai/Trellis), whose PreToolUse hook adds context to its own subagents:
+
+- v0.3.5 checks `tool_name == "Task"`, so on 2.1.63 its hook skips the `research` subagent. hookcompat fails it on `pretooluse-research-subagent`.
+- v0.3.6 accepts `Task` and `Agent` and passes.
+- main (f089cb3) passes `pretooluse-trellis-research-subagent` on 2.1.62, 2.1.63 and 2.1.286.
+
+This shows the hook matched and answered `allow`. It does not check the context the hook added (`updatedInput`).
+
 ## Scope and limits
 
 - Replay: Claude Code `PreToolUse` command hooks only. Anything else is reported as unsupported.
 - Recording: Claude Code and Codex, run by hand on Linux or macOS.
 - It checks the decision (`allow`, `deny`, `ask`, `defer`, `no-opinion`, `error`), not other output such as `updatedInput`.
-- Scenarios: `pretooluse-subagent` on Claude Code 2.1.62 and 2.1.63. More versions and events are being added.
+- Scenarios:
+  - `pretooluse-subagent`: built-in subagent, on 2.1.62 and 2.1.63.
+  - `pretooluse-research-subagent`: a project subagent named `research`, on 2.1.62 and 2.1.63.
+  - `pretooluse-trellis-research-subagent`: a project subagent named `trellis-research`, on 2.1.62, 2.1.63 and 2.1.286.
 - Linux runners only.
 
 ## License
