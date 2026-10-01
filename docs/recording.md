@@ -46,6 +46,17 @@ Expected: a PreToolUse capture with `tool_name: "Task"` on 2.1.62 and `"Agent"` 
 
 Claude Code hook payloads carry no model, so the recorder reads it from the CLI's stream-json output. The 2.1.62 and 2.1.63 fixtures were recorded before that and show `model: "unknown"`; their `run.stdoutTail` shows `claude-sonnet-4-6`.
 
+## Project-defined subagents
+
+Some hooks act only on their own subagent types (for example Trellis's `research`). `pretooluse-research-subagent` seeds `.claude/agents/research.md` into the sandbox repo through the scenario's `files` and asks for that subagent:
+
+```sh
+npm run record -- --harness claude-code --cli-version 2.1.62 --scenario scenarios/pretooluse-research-subagent.yaml
+npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenarios/pretooluse-research-subagent.yaml
+```
+
+Expected: a first PreToolUse capture with `tool_input.subagent_type: "research"`, and `tool_name` `Task` on 2.1.62 and `Agent` on 2.1.63.
+
 ## Safety
 
 - The CLI runs in a throwaway HOME and git repo. Only `PATH`, locale variables and the named credential variables are passed through.

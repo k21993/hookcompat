@@ -1,0 +1,17 @@
+id: pretooluse-research-subagent
+intent: >-
+  The agent delegates one shell command to a project-defined subagent named "research".
+  Records the PreToolUse payload with a custom subagent_type, which hooks such as Trellis's
+  inject-subagent-context.py filter on. Claude Code only.
+files:
+  .claude/agents/research.md: |
+    ---
+    name: research
+    description: Runs the exact shell command it is given and reports the result.
+    tools: Bash
+    ---
+    Run exactly the shell command in your instructions and nothing else, then stop.
+prompt: "Use the research subagent for this, and do not run it yourself: run exactly this shell command and nothing else, then stop: echo hookcompat > {{marker}}"
+capture_events: [SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop]
+respond:
+  PreToolUse: allow

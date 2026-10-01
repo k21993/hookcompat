@@ -1,3 +1,4 @@
+import { posix } from "node:path";
 import { z } from "zod";
 
 export const HarnessId = z.enum(["claude-code", "codex", "fake"]);
@@ -24,6 +25,16 @@ export const Scenario = z.object({
   intent: z.string().min(1),
   prompt: z.string().includes("{{marker}}"),
   capture_events: z.array(HookEvent).min(1),
+  /** Files written into the sandbox repo before the run, by relative path. */
+  files: z
+    .record(
+      z.string().refine((p) => {
+        const n = posix.normalize(p);
+        return p !== "" && !posix.isAbsolute(p) && n !== "." && n !== ".." && !n.startsWith("../");
+      }, "must be a file path inside the repo"),
+      z.string(),
+    )
+    .default({}),
   respond: z
     .object({
       PreToolUse: z.enum(["allow", "deny", "ask"]).optional(),

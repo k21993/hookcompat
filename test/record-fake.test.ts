@@ -89,6 +89,20 @@ describe("recorder pipeline with a fake CLI", () => {
     }
   });
 
+  it("writes scenario files into the sandbox repo before the run", async () => {
+    const out = mkdtempSync(join(tmpdir(), "hookcompat-out-"));
+    const seeded = Scenario.parse({ ...scenario("allow"), id: "seeded", files: { ".claude/agents/research.md": "x" } });
+    const res = await record({ adapter: fakeAdapter, scenario: seeded, outDir: out, timeoutMs: 30_000 });
+    const start = readdirSync(res.runDir!).find((f) => f.includes("-SessionStart-"))!;
+    expect(JSON.parse(readFileSync(join(res.runDir!, start), "utf8")).payload.repo_files).toContain(join(".claude", "agents", "research.md"));
+  });
+
+  it("rejects scenario file paths that are not a file inside the repo", () => {
+    for (const path of ["", ".", "../escape", "a/../../escape", "/etc/passwd"]) {
+      expect(() => Scenario.parse({ ...scenario("allow"), files: { [path]: "x" } }), path).toThrow();
+    }
+  });
+
   it("writes nothing when a secret would leak", async () => {
     process.env.HOOKCOMPAT_FAKE_KEY = "fake-user-home-secret-value";
     const out = mkdtempSync(join(tmpdir(), "hookcompat-out-"));
