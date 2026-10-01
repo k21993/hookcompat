@@ -83,12 +83,11 @@ export const CaptureFixture = z.object({
   /** The hook input was larger than the capture limit and was cut off. */
   stdinTruncated: z.boolean(),
   redactions: z.array(z.string()),
-  review: z.object({
-    status: z.enum(["unreviewed", "reviewed"]),
-    by: z.string().optional(),
-    at: z.string().optional(),
-    note: z.string().optional(),
-  }),
+  /** A reviewed capture must say who reviewed it, when, and what was checked. */
+  review: z.discriminatedUnion("status", [
+    z.object({ status: z.literal("unreviewed") }),
+    z.object({ status: z.literal("reviewed"), by: z.string().min(1), at: z.iso.datetime(), note: z.string().min(1) }),
+  ]),
 });
 export type CaptureFixture = z.infer<typeof CaptureFixture>;
 
