@@ -1,0 +1,41 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T201218941Z-d409d011-adc8-4513-8993-5ef8f367b2de",
+  "harness": "claude-code",
+  "cliVersion": "2.1.286",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T20:12:18.941Z",
+  "runId": "2026-10-01T201205990Z-0daae143",
+  "payload": {
+    "session_id": "e57be3ea-423b-4a80-854f-2a70bedfecb6",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/e57be3ea-423b-4a80-854f-2a70bedfecb6.jsonl",
+    "cwd": "/hookcompat/repo",
+    "prompt_id": "8f3215af-757c-4e4e-a7ce-0ea6ace70869",
+    "permission_mode": "auto",
+    "agent_id": "a2eb4069b3a570d68",
+    "agent_type": "trellis-research",
+    "effort": {
+      "level": "medium"
+    },
+    "hook_event_name": "PreToolUse",
+    "tool_name": "SubagentHandback",
+    "tool_input": {
+      "message": "I ran `echo hookcompat > hookcompat-marker-4303b475316e.txt` in /hookcompat/repo. It finished with no output and no errors. I didn't check the file afterward."
+    },
+    "tool_use_id": "toolu_02XqJlqVneeJQ5PqsT5aQuhj"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "prompt_id",
+    "tool_input.message",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

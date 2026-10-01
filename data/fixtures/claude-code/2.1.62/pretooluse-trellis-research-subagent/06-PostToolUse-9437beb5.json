@@ -1,0 +1,68 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T200342846Z-90af352a-1e1d-42a6-bd54-76969437beb5",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "PostToolUse",
+  "receivedAt": "2026-10-01T20:03:42.846Z",
+  "runId": "2026-10-01T200333954Z-49fd8194",
+  "payload": {
+    "session_id": "99e94180-97b4-43e5-a86d-a1de02966022",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/99e94180-97b4-43e5-a86d-a1de02966022.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Run shell command",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-b1daa9524c56.txt",
+      "subagent_type": "trellis-research"
+    },
+    "tool_response": {
+      "status": "completed",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-b1daa9524c56.txt",
+      "agentId": "a5bc2112657ebec85",
+      "content": [
+        {
+          "type": "text",
+          "text": "The command was executed successfully. The file `/hookcompat/repo/hookcompat-marker-b1daa9524c56.txt` was created with the content `hookcompat`."
+        }
+      ],
+      "totalDurationMs": 3249,
+      "totalTokens": 4453,
+      "totalToolUseCount": 1,
+      "usage": {
+        "input_tokens": 1,
+        "cache_creation_input_tokens": 170,
+        "cache_read_input_tokens": 4200,
+        "output_tokens": 82,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 170
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      }
+    },
+    "tool_use_id": "toolu_197TzCxzGjWqdlNOZDiPJkVG"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_response.content[0].text",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T200339464Z-96e38c5f-5a39-4d95-b854-31c817a5f25c",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T20:03:39.464Z",
+  "runId": "2026-10-01T200333954Z-49fd8194",
+  "payload": {
+    "session_id": "99e94180-97b4-43e5-a86d-a1de02966022",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/99e94180-97b4-43e5-a86d-a1de02966022.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Run shell command",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-b1daa9524c56.txt",
+      "subagent_type": "trellis-research"
+    },
+    "tool_use_id": "toolu_197TzCxzGjWqdlNOZDiPJkVG"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "reviewed",
+    "by": "k21993",
+    "at": "2026-10-01T21:22:18Z",
+    "note": "Reviewed for schema validity, internal consistency, redaction, and agreement with recording evidence. Raw unredacted stdin was not independently observed."
+  }
+}

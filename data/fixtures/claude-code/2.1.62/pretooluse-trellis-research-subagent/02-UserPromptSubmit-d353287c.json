@@ -1,0 +1,28 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T200337137Z-b885bb9a-929d-4909-9911-ac1dd353287c",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-trellis-research-subagent",
+  "event": "UserPromptSubmit",
+  "receivedAt": "2026-10-01T20:03:37.137Z",
+  "runId": "2026-10-01T200333954Z-49fd8194",
+  "payload": {
+    "session_id": "99e94180-97b4-43e5-a86d-a1de02966022",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/99e94180-97b4-43e5-a86d-a1de02966022.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "Use the trellis-research subagent for this, and do not run it yourself: run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-b1daa9524c56.txt"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}
