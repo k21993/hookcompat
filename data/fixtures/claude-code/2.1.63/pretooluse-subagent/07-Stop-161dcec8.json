@@ -1,0 +1,29 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T055405094Z-e01426f0-99e0-49ea-a29f-60c0161dcec8",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-subagent",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T05:54:05.094Z",
+  "runId": "2026-10-01T055355125Z-0c0ebb5a",
+  "payload": {
+    "session_id": "7d9e815d-e8fb-4821-a7fe-32d4e2490af7",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/7d9e815d-e8fb-4821-a7fe-32d4e2490af7.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The subagent ran the command successfully. The file `hookcompat-marker-0fa472cbb3f6.txt` has been created with the content `hookcompat`."
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

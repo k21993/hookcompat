@@ -1,0 +1,113 @@
+{
+  "status": "ok",
+  "context": {
+    "runId": "2026-10-01T055355125Z-0c0ebb5a",
+    "capturedAt": "2026-10-01T05:54:05.326Z",
+    "harness": "claude-code",
+    "cliVersion": "2.1.63",
+    "model": "unknown",
+    "argv": [
+      "/hookcompat/sandbox/cli/node_modules/.bin/claude",
+      "-p",
+      "Delegate this to a subagent, and do not run it yourself: run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-0fa472cbb3f6.txt",
+      "--settings",
+      "/hookcompat/sandbox/claude-settings.json",
+      "--max-turns",
+      "3",
+      "--allowedTools",
+      "Bash",
+      "--output-format",
+      "stream-json",
+      "--verbose",
+      "--debug-file",
+      "/hookcompat/sandbox/logs/claude-debug.log"
+    ],
+    "os": "darwin-arm64",
+    "node": "v26.10.0",
+    "config": {
+      "path": "/hookcompat/sandbox/claude-settings.json",
+      "content": "{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "sha256": "e53185f710e48bc11c92eeef28bc94260f66bfeceb75b7efee765a992479eb5c"
+    },
+    "envAllowlist": [
+      "PATH",
+      "LANG",
+      "LC_ALL",
+      "TERM",
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_OAUTH_TOKEN"
+    ]
+  },
+  "scenario": {
+    "id": "pretooluse-subagent",
+    "intent": "The agent delegates one shell command to a subagent. Records the subagent tool's PreToolUse payload, whose tool_name changed from \"Task\" to \"Agent\" in Claude Code 2.1.63 (anthropics/claude-code#29677). Claude Code only.",
+    "prompt": "Delegate this to a subagent, and do not run it yourself: run exactly this shell command and nothing else, then stop: echo hookcompat > {{marker}}",
+    "capture_events": [
+      "SessionStart",
+      "UserPromptSubmit",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "respond": {
+      "PreToolUse": "allow"
+    }
+  },
+  "marker": "hookcompat-marker-0fa472cbb3f6.txt",
+  "markerCreated": true,
+  "evidence": [
+    {
+      "invocationId": "2026-10-01T055357928Z-1cda5b9d-e606-4fc8-8185-68c0ec46c064",
+      "receivedAt": "2026-10-01T05:53:57.928Z",
+      "event": "SessionStart",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T055358015Z-73528eb7-d05b-4844-a014-9f6b77b45066",
+      "receivedAt": "2026-10-01T05:53:58.015Z",
+      "event": "UserPromptSubmit",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T055400362Z-3bae6d89-4926-492b-b02a-9b9b3ce65c7b",
+      "receivedAt": "2026-10-01T05:54:00.362Z",
+      "event": "PreToolUse",
+      "tool": "Agent",
+      "responded": "allow"
+    },
+    {
+      "invocationId": "2026-10-01T055402578Z-cc064eed-4c5b-4e6f-871c-5c482a7f1268",
+      "receivedAt": "2026-10-01T05:54:02.578Z",
+      "event": "PreToolUse",
+      "tool": "Bash",
+      "responded": "allow"
+    },
+    {
+      "invocationId": "2026-10-01T055402670Z-64936dca-3539-4c76-8b45-e5deca86123c",
+      "receivedAt": "2026-10-01T05:54:02.670Z",
+      "event": "PostToolUse",
+      "tool": "Bash",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T055403780Z-63d6f6a0-8f43-4326-be81-caeaffbca1d4",
+      "receivedAt": "2026-10-01T05:54:03.780Z",
+      "event": "PostToolUse",
+      "tool": "Agent",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T055405094Z-e01426f0-99e0-49ea-a29f-60c0161dcec8",
+      "receivedAt": "2026-10-01T05:54:05.094Z",
+      "event": "Stop",
+      "responded": "none"
+    }
+  ],
+  "run": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdoutTail": "review\",\"security-review\",\"insights\"],\"apiKeySource\":\"none\",\"claude_code_version\":\"2.1.63\",\"output_style\":\"default\",\"agents\":[\"general-purpose\",\"statusline-setup\",\"Explore\",\"Plan\"],\"skills\":[\"debug\",\"simplify\",\"batch\"],\"plugins\":[],\"uuid\":\"24b006c9-ebd3-4268-b1a1-32b010311a4c\",\"fast_mode_state\":\"off\"}\n{\"type\":\"assistant\",\"message\":{\"model\":\"claude-sonnet-4-6\",\"id\":\"msg_011Cfazsh16B9trnJk7RCMDz\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"thinking\",\"thinking\":\"The user wants me to delegate a specific shell command to a subagent. Let me use the Agent tool to run this command.\",\"signature\":\"EpkDCsABCBIYAipAohycuhmGCv1PEkprZoalbPqkFQlN1ASWvCO7KX1wY/84AXqQVpC7vmEX7AngasyGEBfH5mJLRtiRjmMY21I8dDIRY2xhdWRlLXNvbm5ldC00LTY4AEIIdGhpbmtpbmdaJDA3OThiZTE5LTg4YTUtNDdmNi1iY2FiLTg5OGE1YjY1MjA3N3IQt3Om0YU+0r3VH4DSyrOPa4gBAZoBEwoRY2xhdWRlLXNvbm5ldC00LTaoAffq99UGsAECEgySjuEGIMppuRs0KW8aDAjr2WTxVD/OwuiKJyIwmTP0fUOzUpiLFc289LMDG1/PByfUCIdCKQs88R+WrgG03Mmid+yXEeGRsTMJ4V16KoUBsRDm58t8WXec3SrlT5lXV0x+NpHmryc99j3uE0joQ0XECKTyVTR9Y73PWEjVwZ0E57YCGXjXsEVG2VF4hN4Tz0wZ/1FK9rs2tgJDrnOa5ABt0CWSI8YlkxF1xBmkfoV7Oa6H37PufyBN8tRQrfhHnqK6YHil5ll3k709ghsbN4F1DMwRIBgB\"}],\"container\":null,\"stop_reason\":null,\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":19854,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":19854,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":8,\"service_tier\":\"standard\",\"inference_geo\":\"not_available\"},\"diagnostics\":null,\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"c684affd-f48e-4410-a88a-d11beefcfe3a\"}\n{\"type\":\"assistant\",\"message\":{\"model\":\"claude-sonnet-4-6\",\"id\":\"msg_011Cfazsh16B9trnJk7RCMDz\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"name\":\"Agent\",\"input\":{\"description\":\"Run shell command\",\"subagent_type\":\"general-purpose\",\"prompt\":\"Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-0fa472cbb3f6.txt\"},\"caller\":{\"type\":\"direct\"}}],\"container\":null,\"stop_reason\":null,\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":19854,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":19854,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":8,\"service_tier\":\"standard\",\"inference_geo\":\"not_available\"},\"diagnostics\":null,\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"19a6f2ed-007f-46b4-897b-494210542d92\"}\n{\"type\":\"rate_limit_event\",\"rate_limit_info\":{\"status\":\"allowed\",\"resetsAt\":1790847600,\"rateLimitType\":\"five_hour\",\"overageStatus\":\"rejected\",\"overageDisabledReason\":\"org_level_disabled\",\"isUsingOverage\":false},\"uuid\":\"52d338e0-c37c-429b-9af3-62a45ed22af6\",\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\"}\n{\"type\":\"system\",\"subtype\":\"task_started\",\"task_id\":\"aa4c608f809542dfd\",\"tool_use_id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"description\":\"Run shell command\",\"task_type\":\"local_agent\",\"uuid\":\"b4cf78ab-d5f1-42ce-bf96-081f440aec53\",\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\"}\n{\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-0fa472cbb3f6.txt\"}]},\"parent_tool_use_id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"ebf44a0d-8824-4842-93b4-4720fa6ff28e\"}\n{\"type\":\"assistant\",\"message\":{\"model\":\"claude-sonnet-4-6\",\"id\":\"msg_011Cfazsrx8RNDnC6TQbDwqS\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"tool_use\",\"id\":\"toolu_46YtQWdNutTMdVRFKiyUW5ZP\",\"name\":\"Bash\",\"input\":{\"command\":\"echo hookcompat > /hookcompat/repo/hookcompat-marker-0fa472cbb3f6.txt\",\"description\":\"Run the exact specified command\"},\"caller\":{\"type\":\"direct\"}}],\"container\":null,\"stop_reason\":null,\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":3,\"cache_creation_input_tokens\":11911,\"cache_read_input_tokens\":0,\"cache_creation\":{\"ephemeral_5m_input_tokens\":11911,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":25,\"service_tier\":\"standard\",\"inference_geo\":\"not_available\"},\"diagnostics\":null,\"context_management\":null},\"parent_tool_use_id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"0b924a8a-cca3-4d9d-80a9-da0b608b62c4\"}\n{\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":[{\"tool_use_id\":\"toolu_46YtQWdNutTMdVRFKiyUW5ZP\",\"type\":\"tool_result\",\"content\":\"\",\"is_error\":false}]},\"parent_tool_use_id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"56db072e-6536-4822-9bf2-10fcb15610a8\"}\n{\"type\":\"user\",\"message\":{\"role\":\"user\",\"content\":[{\"tool_use_id\":\"toolu_258y5walYUYkZFe7P9usQS2j\",\"type\":\"tool_result\",\"content\":[{\"type\":\"text\",\"text\":\"The command was executed successfully. The file `hookcompat-marker-0fa472cbb3f6.txt` has been created with the content `hookcompat`.\"},{\"type\":\"text\",\"text\":\"agentId: aa4c608f809542dfd (for resuming to continue this agent's work if needed)\\n<usage>total_tokens: 12117\\ntool_uses: 1\\nduration_ms: 3295</usage>\"}]}]},\"parent_tool_use_id\":null,\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"6cead6b1-bb1e-4e16-b4a9-2250de7c4b6c\",\"tool_use_result\":{\"status\":\"completed\",\"prompt\":\"Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-0fa472cbb3f6.txt\",\"agentId\":\"aa4c608f809542dfd\",\"content\":[{\"type\":\"text\",\"text\":\"The command was executed successfully. The file `hookcompat-marker-0fa472cbb3f6.txt` has been created with the content `hookcompat`.\"}],\"totalDurationMs\":3295,\"totalTokens\":12117,\"totalToolUseCount\":1,\"usage\":{\"input_tokens\":1,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":11911,\"output_tokens\":38,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":167},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"}}}\n{\"type\":\"assistant\",\"message\":{\"model\":\"claude-sonnet-4-6\",\"id\":\"msg_011Cfazt7XE2zapvjKPiBGHp\",\"type\":\"message\",\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"The subagent ran the command successfully. The file `hookcompat-marker-0fa472cbb3f6.txt` has been created with the content `hookcompat`.\"}],\"container\":null,\"stop_reason\":null,\"stop_sequence\":null,\"stop_details\":null,\"usage\":{\"input_tokens\":1,\"cache_creation_input_tokens\":268,\"cache_read_input_tokens\":19854,\"cache_creation\":{\"ephemeral_5m_input_tokens\":268,\"ephemeral_1h_input_tokens\":0},\"output_tokens\":1,\"service_tier\":\"standard\",\"inference_geo\":\"not_available\"},\"diagnostics\":null,\"context_management\":null},\"parent_tool_use_id\":null,\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"uuid\":\"a9155a2b-4425-439a-8e15-ce925e0d065d\"}\n{\"type\":\"result\",\"subtype\":\"success\",\"is_error\":false,\"duration_ms\":7161,\"duration_api_ms\":6480,\"num_turns\":2,\"result\":\"The subagent ran the command successfully. The file `hookcompat-marker-0fa472cbb3f6.txt` has been created with the content `hookcompat`.\",\"stop_reason\":null,\"session_id\":\"7d9e815d-e8fb-4821-a7fe-32d4e2490af7\",\"total_cost_usd\":0.2267475,\"usage\":{\"input_tokens\":4,\"cache_creation_input_tokens\":20122,\"cache_read_input_tokens\":19854,\"output_tokens\":206,\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":0,\"ephemeral_5m_input_tokens\":20122},\"inference_geo\":\"\",\"iterations\":[],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-4-6\":{\"inputTokens\":8,\"outputTokens\":383,\"cacheReadInputTokens\":31765,\"cacheCreationInputTokens\":32200,\"webSearchRequests\":0,\"costUSD\":0.2267475,\"contextWindow\":200000,\"maxOutputTokens\":32000}},\"permission_denials\":[],\"fast_mode_state\":\"off\",\"uuid\":\"61693a5e-409c-4ebe-b51c-8cdac8844f8b\"}\n",
+    "stderrTail": ""
+  }
+}

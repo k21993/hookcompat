@@ -1,0 +1,35 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T055347504Z-961694d9-6041-488c-a72b-8b303f0913a6",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-subagent",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T05:53:47.504Z",
+  "runId": "2026-10-01T055341435Z-6d4e7410",
+  "payload": {
+    "session_id": "7963d101-2558-44d8-8b54-fca62c9eeca2",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/7963d101-2558-44d8-8b54-fca62c9eeca2.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Run shell command",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-2c625dd79d57.txt",
+      "subagent_type": "general-purpose"
+    },
+    "tool_use_id": "toolu_95UH1BkAVuGWi4cFpEvZs0xd"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}
