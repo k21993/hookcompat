@@ -20,7 +20,7 @@ npm run record -- --harness codex --scenario scenarios/pretooluse-shell-write-de
 Each run prints a JSON summary and writes to `captures/<harness>/<cliVersion>/<scenario>/<runId>/`:
 
 - `NN-<Event>-<id>.json`: one untouched (redacted) hook input per invocation, marked `unreviewed`.
-- `recording.json`: the capture context (CLI version, model, argv, OS, the sanitised hook config and its hash, the env allowlist), what the capture hook answered for each event, whether the marker file was created, and the tail of the CLI's output.
+- `recording.json`: the capture context (CLI version, model, argv, OS, the sanitised hook config and its hash, the env allowlist), what the capture hook answered for each event, whether the marker file was created, and the size and SHA-256 of the CLI's output. The output itself is not kept: it carries request IDs and model internals.
 
 ## What day 1 needs to answer
 
@@ -44,7 +44,7 @@ npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenario
 
 Expected: a PreToolUse capture with `tool_name: "Task"` on 2.1.62 and `"Agent"` on 2.1.63.
 
-Claude Code hook payloads carry no model, so the recorder reads it from the CLI's stream-json output. The 2.1.62 and 2.1.63 fixtures were recorded before that and show `model: "unknown"`; their `run.stdoutTail` shows `claude-sonnet-4-6`.
+Claude Code hook payloads carry no model, so the recorder reads it from the CLI's stream-json output. The `pretooluse-subagent` fixtures for 2.1.62 and 2.1.63 were recorded before that and show `model: "unknown"`; their CLI output, since removed from the repo, showed `claude-sonnet-4-6`.
 
 ## Project-defined subagents
 

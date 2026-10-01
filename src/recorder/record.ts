@@ -178,8 +178,9 @@ export async function record(opts: RecordOptions): Promise<RecordResult> {
         signal: result.signal,
         timedOut: result.timedOut,
         launchError: result.launchError,
-        stdoutTail: redactor.redactText(result.stdout.slice(-8000)),
-        stderrTail: redactor.redactText(result.stderr.slice(-8000)),
+        // Raw CLI output carries request IDs and model internals, so only its size and hash are kept.
+        stdout: outputDigest(result.stdout),
+        stderr: outputDigest(result.stderr),
       },
     };
 
@@ -214,6 +215,10 @@ function modelFromCaptures(payloads: unknown[]): string | undefined {
     }
   }
   return undefined;
+}
+
+function outputDigest(text: string) {
+  return { bytes: Buffer.byteLength(text), sha256: createHash("sha256").update(text).digest("hex") };
 }
 
 /** Claude Code hook payloads have no model; its stream-json output does. */
