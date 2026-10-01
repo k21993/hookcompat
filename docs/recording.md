@@ -33,6 +33,17 @@ Each run prints a JSON summary and writes to `captures/<harness>/<cliVersion>/<s
 
 If a flag the adapters pass is wrong for your CLI version, adjust without code changes using `--extra-arg`, and keep `--keep-sandbox` to inspect what happened.
 
+## Known breakage: subagent tool rename (Claude Code 2.1.63)
+
+Claude Code 2.1.63 renamed the subagent tool from `Task` to `Agent` in hook payloads, without a changelog entry ([anthropics/claude-code#29677](https://github.com/anthropics/claude-code/issues/29677)). Hooks matching `Task` stopped firing. Record both sides:
+
+```sh
+npm run record -- --harness claude-code --cli-version 2.1.62 --scenario scenarios/pretooluse-subagent.yaml
+npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenarios/pretooluse-subagent.yaml
+```
+
+Expected: a PreToolUse capture with `tool_name: "Task"` on 2.1.62 and `"Agent"` on 2.1.63.
+
 ## Safety
 
 - The CLI runs in a throwaway HOME and git repo. Only `PATH`, locale variables and the named credential variables are passed through.

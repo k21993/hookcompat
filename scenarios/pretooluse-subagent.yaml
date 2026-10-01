@@ -1,0 +1,9 @@
+id: pretooluse-subagent
+intent: >-
+  The agent delegates one shell command to a subagent. Records the subagent tool's PreToolUse payload,
+  whose tool_name changed from "Task" to "Agent" in Claude Code 2.1.63 (anthropics/claude-code#29677).
+  Claude Code only.
+prompt: "Delegate this to a subagent, and do not run it yourself: run exactly this shell command and nothing else, then stop: echo hookcompat > {{marker}}"
+capture_events: [SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop]
+respond:
+  PreToolUse: allow
