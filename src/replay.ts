@@ -136,7 +136,7 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
 const REPO_PLACEHOLDER = "/hookcompat/repo";
 
 /** Point redacted repo paths (cwd and paths under it) at the adopter's checkout, so hooks can find their files. */
-function withRepoDir(value: unknown, dir: string): unknown {
+export function withRepoDir(value: unknown, dir: string): unknown {
   if (typeof value === "string") {
     return value === REPO_PLACEHOLDER || value.startsWith(REPO_PLACEHOLDER + "/") ? dir + value.slice(REPO_PLACEHOLDER.length) : value;
   }
