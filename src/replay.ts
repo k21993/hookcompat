@@ -10,23 +10,28 @@ import { CaptureFixture } from "./schema.js";
 const Kind = z.enum(["allow", "deny", "ask", "defer", "no-opinion", "error"]);
 
 /** hookcompat.yml in the adopter's repo. Paths are relative to this file. */
-export const ReplayConfig = z.object({
-  harness: z.string(),
-  settings: z.string(),
-  cases: z
-    .array(
-      z.object({
-        scenario: z.string(),
-        /** The first capture of this event in the scenario is replayed. */
-        event: z.string().default("PreToolUse"),
-        /** One decision, or a list when several are acceptable. */
-        expect: z.union([Kind, z.array(Kind).min(1)]),
-        /** Default: every version we have fixtures for. */
-        versions: z.array(z.string()).optional(),
-      }),
-    )
-    .min(1),
-});
+export const ReplayConfig = z
+  .object({
+    harness: z.string(),
+    /** A settings file with a `hooks` key, such as .claude/settings.json. */
+    settings: z.string().optional(),
+    /** A plugin directory. Its hooks/hooks.json is used, and CLAUDE_PLUGIN_ROOT points at it. */
+    plugin: z.string().optional(),
+    cases: z
+      .array(
+        z.object({
+          scenario: z.string(),
+          /** The first capture of this event in the scenario is replayed. */
+          event: z.string().default("PreToolUse"),
+          /** One decision, or a list when several are acceptable. */
+          expect: z.union([Kind, z.array(Kind).min(1)]),
+          /** Default: every version we have fixtures for. */
+          versions: z.array(z.string()).optional(),
+        }),
+      )
+      .min(1),
+  })
+  .refine((c) => (c.settings === undefined) !== (c.plugin === undefined), "set exactly one of settings or plugin");
 export type ReplayConfig = z.infer<typeof ReplayConfig>;
 
 export interface CaseResult {
@@ -63,7 +68,15 @@ const SUPPORTED_EVENTS = ["PreToolUse"];
 export async function replay(configPath: string, dataDir: string): Promise<ReplayReport> {
   const config = ReplayConfig.parse(parseYaml(readFileSync(configPath, "utf8")));
   const projectDir = dirname(resolve(configPath));
-  const settings = JSON.parse(readFileSync(join(projectDir, config.settings), "utf8"));
+  const pluginRoot = config.plugin === undefined ? undefined : resolve(projectDir, config.plugin);
+  const settingsPath = pluginRoot ? join(pluginRoot, "hooks", "hooks.json") : join(projectDir, config.settings!);
+  const settings = JSON.parse(readFileSync(settingsPath, "utf8"));
+  const env = {
+    PATH: process.env.PATH,
+    HOME: process.env.HOME,
+    CLAUDE_PROJECT_DIR: projectDir,
+    ...(pluginRoot && { CLAUDE_PLUGIN_ROOT: pluginRoot }),
+  };
   const results: CaseResult[] = [];
   let unreviewed = 0;
 
@@ -100,7 +113,7 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
         const run = await runBounded({
           argv: ["sh", "-c", hook.command],
           cwd: projectDir,
-          env: { PATH: process.env.PATH, HOME: process.env.HOME, CLAUDE_PROJECT_DIR: projectDir },
+          env,
           input: JSON.stringify(payload),
           timeoutMs: (hook.timeout ?? 60) * 1000,
           maxOutputBytes: 1024 * 1024,

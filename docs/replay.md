@@ -6,6 +6,7 @@ The Action runs the hooks from your Claude Code settings against hook payloads r
 # hookcompat.yml, next to your workflow's checkout root
 harness: claude-code
 settings: .claude/settings.json   # matchers and commands are read from here
+# or, for a plugin: plugin: plugins/my-plugin   (uses its hooks/hooks.json and sets CLAUDE_PLUGIN_ROOT)
 cases:
   - scenario: pretooluse-subagent # recorded scenario under data/fixtures/<harness>/<version>/
     expect: deny                  # or a list: [deny, ask]
@@ -31,5 +32,5 @@ The run fails if any case fails, if no reviewed fixture matches, or if no case w
 
 - Claude Code `PreToolUse` and command hooks only. Anything else is reported as unsupported.
 - Payloads are captures as recorded, with one change: the redacted repo path `/hookcompat/repo` (in `cwd` and paths under it) is replaced with the directory of `hookcompat.yml`, so hooks that find the repo from `cwd` work. Other redacted paths, such as `transcript_path`, point nowhere.
-- Hooks run with `sh -c` in the directory of `hookcompat.yml`, with `PATH`, `HOME` and `CLAUDE_PROJECT_DIR` set. Your hook's own runtime (Python, `jq` and so on) must be installed in your workflow.
+- Hooks run with `sh -c` in the directory of `hookcompat.yml`, with `PATH`, `HOME` and `CLAUDE_PROJECT_DIR` set, plus `CLAUDE_PLUGIN_ROOT` for a plugin. Your hook's own runtime (Python, `jq` and so on) must be installed in your workflow.
 - Linux runners only.

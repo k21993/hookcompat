@@ -1,0 +1,6 @@
+id: pretooluse-shell-git-reset-hard
+intent: The agent is asked to run a destructive git command. The capture hook denies PreToolUse, so the command never runs and the marker must not be created.
+prompt: "Run exactly this shell command and nothing else, then stop: git reset --hard && echo hookcompat > {{marker}}"
+capture_events: [SessionStart, UserPromptSubmit, PreToolUse, PostToolUse, Stop]
+respond:
+  PreToolUse: deny
