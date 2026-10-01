@@ -1,2 +1,59 @@
 # hookcompat
-Test your Claude Code and Codex hooks against real, version-labelled hook payloads
+
+Claude Code changes the payloads it sends to hooks between versions, sometimes without a changelog entry. A hook that worked last month can stop enforcing anything, with no error.
+
+hookcompat replays hook payloads recorded from real Claude Code versions against your hooks in CI, and fails when a hook's decision is not what you expect.
+
+Example: Claude Code 2.1.63 renamed the subagent tool from `Task` to `Agent` in hook payloads ([anthropics/claude-code#29677](https://github.com/anthropics/claude-code/issues/29677)). A hook that blocks subagents by checking `tool_name == "Task"` denies on 2.1.62 and silently allows on 2.1.63. hookcompat catches it:
+
+| Result | Version | tool_name | Expected | Got |
+|---|---|---|---|---|
+| PASS | 2.1.62 | Task | deny | deny |
+| FAIL | 2.1.63 | Agent | deny | no-opinion |
+
+## Usage
+
+Add `hookcompat.yml` to your repo:
+
+```yaml
+harness: claude-code
+settings: .claude/settings.json
+cases:
+  - scenario: pretooluse-subagent
+    expect: deny
+```
+
+And a workflow:
+
+```yaml
+on: [pull_request]
+jobs:
+  hookcompat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: k21993/hookcompat@v0.1.0
+        with:
+          config: hookcompat.yml
+```
+
+The Action reads your matchers and hook commands from the settings file, runs the matching hooks with each recorded payload on stdin, and writes a results table to the job summary. Your hooks' own runtime (Python, `jq` and so on) must be installed in the job. See [examples/consumer](examples/consumer) and [docs/replay.md](docs/replay.md).
+
+## Where the payloads come from
+
+- Each fixture is a hook input captured from a real Claude Code run, with paths, IDs and secrets redacted. See [docs/recording.md](docs/recording.md).
+- Fixtures are labelled with the CLI version and model, and keep the run's context (argv, hook config, OS).
+- Replay only uses fixtures marked `reviewed`. Unreviewed captures are skipped and counted.
+- Replay makes no model calls and needs no API keys.
+
+## Scope and limits
+
+- Replay: Claude Code `PreToolUse` command hooks only. Anything else is reported as unsupported.
+- Recording: Claude Code and Codex, run by hand on Linux or macOS.
+- It checks the decision (`allow`, `deny`, `ask`, `defer`, `no-opinion`, `error`), not other output such as `updatedInput`.
+- Scenarios: `pretooluse-subagent` on Claude Code 2.1.62 and 2.1.63. More versions and events are being added.
+- Linux runners only.
+
+## License
+
+MIT
