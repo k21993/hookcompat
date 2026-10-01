@@ -14,7 +14,7 @@ cases:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: k21993/hookcompat@main
+- uses: k21993/hookcompat@v0.1.0
   with:
     config: hookcompat.yml
 ```
