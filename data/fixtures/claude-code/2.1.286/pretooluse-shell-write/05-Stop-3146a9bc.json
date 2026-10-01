@@ -1,0 +1,36 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223743500Z-3d8ae678-2ddd-4f78-a61f-2ea63146a9bc",
+  "harness": "claude-code",
+  "cliVersion": "2.1.286",
+  "scenario": "pretooluse-shell-write",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T22:37:43.500Z",
+  "runId": "2026-10-01T223733957Z-ff48ca6d",
+  "payload": {
+    "session_id": "cff55386-507f-4b7d-94db-12d4074b7cf3",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/cff55386-507f-4b7d-94db-12d4074b7cf3.jsonl",
+    "cwd": "/hookcompat/repo",
+    "prompt_id": "606147bf-2aef-4c41-97ec-d1f7a1b17eba",
+    "permission_mode": "auto",
+    "effort": {
+      "level": "medium"
+    },
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "I ran the command. It wrote `hookcompat` to `hookcompat-marker-6d190372f40c.txt` in the working directory and printed no output.",
+    "background_tasks": [],
+    "session_crons": []
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "prompt_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

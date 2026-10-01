@@ -1,0 +1,37 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223643549Z-f5d38706-a299-48a1-b9f2-86450bcf1ffb",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T22:36:43.549Z",
+  "runId": "2026-10-01T223621708Z-16f69d91",
+  "payload": {
+    "session_id": "2e7c916b-b371-4f7a-8e19-2ef4951e1457",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/2e7c916b-b371-4f7a-8e19-2ef4951e1457.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "git reset --hard && echo hookcompat > hookcompat-marker-bff791297f4d.txt",
+      "description": "Run git reset --hard and create hookcompat marker file"
+    },
+    "tool_use_id": "toolu_492ehNCpmBCeGrTdUzljwpiE"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "reviewed",
+    "by": "k21993",
+    "at": "2026-10-01T22:49:47Z",
+    "note": "Reviewed for schema validity, internal consistency, redaction, and agreement with recording evidence. Raw unredacted stdin was not independently observed."
+  }
+}

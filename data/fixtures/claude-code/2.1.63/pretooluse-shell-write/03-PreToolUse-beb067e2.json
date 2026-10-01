@@ -1,0 +1,37 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223720580Z-dddc52a7-4b3e-41d4-a865-574fbeb067e2",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-shell-write",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T22:37:20.580Z",
+  "runId": "2026-10-01T223715631Z-2350211d",
+  "payload": {
+    "session_id": "581d6a0a-a03b-4604-ae04-5c84709f1f3c",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/581d6a0a-a03b-4604-ae04-5c84709f1f3c.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo hookcompat > hookcompat-marker-9a54cb4ef1f9.txt",
+      "description": "Write \"hookcompat\" to marker file"
+    },
+    "tool_use_id": "toolu_91OlZOwCGTyJTBKRB7ySk6py"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "reviewed",
+    "by": "k21993",
+    "at": "2026-10-01T22:49:47Z",
+    "note": "Reviewed for schema validity, internal consistency, redaction, and agreement with recording evidence. Raw unredacted stdin was not independently observed."
+  }
+}

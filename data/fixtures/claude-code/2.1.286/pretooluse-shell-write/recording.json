@@ -1,0 +1,106 @@
+{
+  "status": "ok",
+  "context": {
+    "runId": "2026-10-01T223733957Z-ff48ca6d",
+    "capturedAt": "2026-10-01T22:37:44.044Z",
+    "harness": "claude-code",
+    "cliVersion": "2.1.286",
+    "model": "claude-sonnet-5-5",
+    "argv": [
+      "/hookcompat/sandbox/cli/node_modules/.bin/claude",
+      "-p",
+      "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-6d190372f40c.txt",
+      "--settings",
+      "/hookcompat/sandbox/claude-settings.json",
+      "--max-turns",
+      "3",
+      "--allowedTools",
+      "Bash",
+      "--output-format",
+      "stream-json",
+      "--verbose",
+      "--debug-file",
+      "/hookcompat/sandbox/logs/claude-debug.log"
+    ],
+    "os": "darwin-arm64",
+    "node": "v26.10.0",
+    "config": {
+      "path": "/hookcompat/sandbox/claude-settings.json",
+      "content": "{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ],\n        \"matcher\": \"*\"\n      }\n    ],\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"node '/hookcompat/sandbox/bin/capture.mjs' '/hookcompat/sandbox/captures' '/hookcompat/sandbox/respond.json'\",\n            \"timeout\": 30\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "sha256": "e53185f710e48bc11c92eeef28bc94260f66bfeceb75b7efee765a992479eb5c"
+    },
+    "envAllowlist": [
+      "PATH",
+      "LANG",
+      "LC_ALL",
+      "TERM",
+      "ANTHROPIC_API_KEY",
+      "CLAUDE_CODE_OAUTH_TOKEN"
+    ]
+  },
+  "scenario": {
+    "id": "pretooluse-shell-write",
+    "intent": "The agent runs one shell command that writes a marker file. The capture hook allows it.",
+    "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > {{marker}}",
+    "capture_events": [
+      "SessionStart",
+      "UserPromptSubmit",
+      "PreToolUse",
+      "PostToolUse",
+      "Stop"
+    ],
+    "files": {},
+    "respond": {
+      "PreToolUse": "allow"
+    }
+  },
+  "marker": "hookcompat-marker-6d190372f40c.txt",
+  "markerCreated": true,
+  "evidence": [
+    {
+      "invocationId": "2026-10-01T223739610Z-6030ac14-b532-4e4b-8d59-fe8e5e6fb402",
+      "receivedAt": "2026-10-01T22:37:39.610Z",
+      "event": "SessionStart",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T223739711Z-42298676-f4c5-4f03-abe3-2c5f8a54de30",
+      "receivedAt": "2026-10-01T22:37:39.711Z",
+      "event": "UserPromptSubmit",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T223741621Z-1760cea2-c8a5-4a3b-ad4f-5de09560a398",
+      "receivedAt": "2026-10-01T22:37:41.621Z",
+      "event": "PreToolUse",
+      "tool": "Bash",
+      "responded": "allow"
+    },
+    {
+      "invocationId": "2026-10-01T223741739Z-0f79f6ec-ab23-4f48-8e97-d16cc6f990e0",
+      "receivedAt": "2026-10-01T22:37:41.739Z",
+      "event": "PostToolUse",
+      "tool": "Bash",
+      "responded": "none"
+    },
+    {
+      "invocationId": "2026-10-01T223743500Z-3d8ae678-2ddd-4f78-a61f-2ea63146a9bc",
+      "receivedAt": "2026-10-01T22:37:43.500Z",
+      "event": "Stop",
+      "responded": "none"
+    }
+  ],
+  "run": {
+    "exitCode": 0,
+    "signal": null,
+    "timedOut": false,
+    "stdout": {
+      "bytes": 8151,
+      "sha256": "667989501c541f7cbfe70d78ef756d76addaa270f3684f75731d9054620c045f"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

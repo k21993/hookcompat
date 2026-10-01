@@ -1,0 +1,30 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223648491Z-3747614d-350b-413f-aaee-80731c6bcd51",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-shell-git-reset-hard",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T22:36:48.491Z",
+  "runId": "2026-10-01T223621708Z-16f69d91",
+  "payload": {
+    "session_id": "2e7c916b-b371-4f7a-8e19-2ef4951e1457",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/2e7c916b-b371-4f7a-8e19-2ef4951e1457.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The command was blocked by a PreToolUse hook (`hookcompat reference hook`). I cannot run the command as the hook is preventing Bash tool execution. You may need to check your hooks configuration at the path shown in the error:\n\n`/hookcompat/sandbox/respond.json`"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "last_assistant_message"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

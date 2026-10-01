@@ -1,0 +1,27 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223651953Z-4f0119e8-9774-4b75-9368-876171e804ec",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-shell-write",
+  "event": "SessionStart",
+  "receivedAt": "2026-10-01T22:36:51.953Z",
+  "runId": "2026-10-01T223649196Z-eef54210",
+  "payload": {
+    "session_id": "3b67839a-c943-4e37-a361-92fadbb10c19",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/3b67839a-c943-4e37-a361-92fadbb10c19.jsonl",
+    "cwd": "/hookcompat/repo",
+    "hook_event_name": "SessionStart",
+    "source": "startup"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

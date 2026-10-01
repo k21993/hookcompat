@@ -1,4 +1,4 @@
-import { mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -41,6 +41,16 @@ describe("replay", () => {
   it("points the payload cwd at the project directory", async () => {
     const hook = { type: "command", command: 'test "$(jq -r .cwd)" = "$CLAUDE_PROJECT_DIR" && exit 2; exit 0' };
     expect(await replay(project(CASE, "*", hook), DATA)).toMatchObject({ ok: true, passed: 2 });
+  });
+
+  it("runs plugin hooks with CLAUDE_PLUGIN_ROOT set to the plugin directory", async () => {
+    const config = project(CASE.replace("settings: settings.json", "plugin: plugins/guard"));
+    const plugin = join(config, "..", "plugins", "guard");
+    mkdirSync(join(plugin, "hooks"), { recursive: true });
+    writeFileSync(join(plugin, "guard.sh"), "exit 2");
+    const hook = { type: "command", command: 'sh "${CLAUDE_PLUGIN_ROOT}/guard.sh"' };
+    writeFileSync(join(plugin, "hooks", "hooks.json"), JSON.stringify({ hooks: { PreToolUse: [{ matcher: "*", hooks: [hook] }] } }));
+    expect(await replay(config, DATA)).toMatchObject({ ok: true, passed: 2 });
   });
 
   it("maps paths under the repo placeholder and leaves look-alike prefixes alone", () => {

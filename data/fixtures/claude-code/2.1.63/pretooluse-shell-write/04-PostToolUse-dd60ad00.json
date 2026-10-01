@@ -1,0 +1,41 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T223720682Z-06f7728b-8a88-4649-a2b0-0fb2dd60ad00",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-shell-write",
+  "event": "PostToolUse",
+  "receivedAt": "2026-10-01T22:37:20.682Z",
+  "runId": "2026-10-01T223715631Z-2350211d",
+  "payload": {
+    "session_id": "581d6a0a-a03b-4604-ae04-5c84709f1f3c",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/581d6a0a-a03b-4604-ae04-5c84709f1f3c.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "echo hookcompat > hookcompat-marker-9a54cb4ef1f9.txt",
+      "description": "Write \"hookcompat\" to marker file"
+    },
+    "tool_response": {
+      "stdout": "",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false,
+      "noOutputExpected": false
+    },
+    "tool_use_id": "toolu_91OlZOwCGTyJTBKRB7ySk6py"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

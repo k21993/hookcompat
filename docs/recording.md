@@ -57,6 +57,17 @@ npm run record -- --harness claude-code --cli-version 2.1.63 --scenario scenario
 
 Expected: a first PreToolUse capture with `tool_input.subagent_type: "research"`, and `tool_name` `Task` on 2.1.62 and `Agent` on 2.1.63.
 
+## Destructive shell commands
+
+Hooks that block dangerous commands need a capture of the command they block. `pretooluse-shell-git-reset-hard` asks for `git reset --hard` and the capture hook denies it, so it never runs. Record it with `pretooluse-shell-write` as the harmless counterpart:
+
+```sh
+npm run record -- --harness claude-code --cli-version <version> --scenario scenarios/pretooluse-shell-git-reset-hard.yaml
+npm run record -- --harness claude-code --cli-version <version> --scenario scenarios/pretooluse-shell-write.yaml
+```
+
+Expected: a first PreToolUse capture with `tool_name: "Bash"` and the command in `tool_input.command`, and `markerCreated: false` for the deny run.
+
 ## Safety
 
 - The CLI runs in a throwaway HOME and git repo. Only `PATH`, locale variables and the named credential variables are passed through.
