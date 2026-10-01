@@ -26,9 +26,11 @@ if (values.version) {
 
 const config = JSON.parse(readFileSync(values.config, "utf8"));
 const cwd = process.cwd();
+const sessionId = "3f2b8c1e-9a4d-4e2f-8b7a-1c2d3e4f5a6b";
 const common = {
-  session_id: "3f2b8c1e-9a4d-4e2f-8b7a-1c2d3e4f5a6b",
-  transcript_path: join(process.env.HOME, ".fake", "transcript.jsonl"),
+  session_id: sessionId,
+  // Same layout as Claude Code: ~/.claude/projects/<cwd with non-alphanumerics as "-">/<session_id>.jsonl
+  transcript_path: join(process.env.HOME, ".claude", "projects", cwd.replace(/[^A-Za-z0-9]/g, "-"), `${sessionId}.jsonl`),
   cwd,
   permission_mode: "default",
   model: "fake-model-1",

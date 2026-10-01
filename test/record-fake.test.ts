@@ -1,4 +1,4 @@
-import { mkdtempSync, readdirSync, readFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -33,6 +33,7 @@ describe("recorder pipeline with a fake CLI", () => {
     const payload = pre.payload as Record<string, unknown>;
     expect(payload.cwd).toBe("/hookcompat/repo");
     expect(payload.session_id).not.toBe("3f2b8c1e-9a4d-4e2f-8b7a-1c2d3e4f5a6b");
+    expect(payload.transcript_path).toBe(`/hookcompat/home/.claude/projects/-hookcompat-repo/${payload.session_id}.jsonl`);
     expect(pre.review.status).toBe("unreviewed");
 
     const recording = JSON.parse(readFileSync(join(res.runDir!, "recording.json"), "utf8"));
@@ -70,6 +71,22 @@ describe("recorder pipeline with a fake CLI", () => {
       .map((f) => CaptureFixture.parse(JSON.parse(readFileSync(join(res.runDir!, f), "utf8"))));
     expect(fixtures.filter((f) => f.stdinTruncated)).toHaveLength(1);
     expect(JSON.parse(readFileSync(join(res.runDir!, "recording.json"), "utf8")).status).toBe("incomplete");
+  });
+
+  it("redacts paths when the temp dir is a symlink (as on macOS)", async () => {
+    const link = join(mkdtempSync(join(tmpdir(), "hookcompat-link-")), "tmp");
+    symlinkSync(mkdtempSync(join(tmpdir(), "hookcompat-real-")), link);
+    const saved = process.env.TMPDIR;
+    process.env.TMPDIR = link;
+    try {
+      const out = mkdtempSync(join(saved ?? "/tmp", "hookcompat-out-"));
+      const res = await record({ adapter: fakeAdapter, scenario: scenario("allow"), outDir: out, timeoutMs: 30_000 });
+      const pre = readdirSync(res.runDir!).find((f) => f.includes("-PreToolUse-"))!;
+      expect(JSON.parse(readFileSync(join(res.runDir!, pre), "utf8")).payload.cwd).toBe("/hookcompat/repo");
+    } finally {
+      if (saved === undefined) delete process.env.TMPDIR;
+      else process.env.TMPDIR = saved;
+    }
   });
 
   it("writes nothing when a secret would leak", async () => {

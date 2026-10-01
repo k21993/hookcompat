@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import { copyFileSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomBytes } from "node:crypto";
@@ -23,7 +23,8 @@ export interface Sandbox {
 const CAPTURE_HOOK_SOURCE = fileURLToPath(new URL("../../hooks/capture.mjs", import.meta.url));
 
 export function createSandbox(): Sandbox {
-  const root = mkdtempSync(join(tmpdir(), "hookcompat-"));
+  // Resolve symlinks (macOS /var -> /private/var) so redaction matches the paths CLIs report.
+  const root = realpathSync(mkdtempSync(join(tmpdir(), "hookcompat-")));
   const home = join(root, "home");
   const repo = join(root, "repo");
   const captureDir = join(root, "captures");
