@@ -1,0 +1,68 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T065707287Z-acf5587d-0a4c-4210-9686-1ec5fcd04a0c",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-research-subagent",
+  "event": "PostToolUse",
+  "receivedAt": "2026-10-01T06:57:07.287Z",
+  "runId": "2026-10-01T065653495Z-0eb311c8",
+  "payload": {
+    "session_id": "5d67aef7-6fa2-41eb-815c-a554809a5e25",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/5d67aef7-6fa2-41eb-815c-a554809a5e25.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Task",
+    "tool_input": {
+      "description": "Run shell command",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-775278cbdc5a.txt",
+      "subagent_type": "research"
+    },
+    "tool_response": {
+      "status": "completed",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-775278cbdc5a.txt",
+      "agentId": "a773d670f813cb131",
+      "content": [
+        {
+          "type": "text",
+          "text": "The command ran successfully. The file `/hookcompat/repo/hookcompat-marker-775278cbdc5a.txt` was created with the content `hookcompat`."
+        }
+      ],
+      "totalDurationMs": 6345,
+      "totalTokens": 4446,
+      "totalToolUseCount": 1,
+      "usage": {
+        "input_tokens": 1,
+        "cache_creation_input_tokens": 168,
+        "cache_read_input_tokens": 4198,
+        "output_tokens": 79,
+        "server_tool_use": {
+          "web_search_requests": 0,
+          "web_fetch_requests": 0
+        },
+        "service_tier": "standard",
+        "cache_creation": {
+          "ephemeral_1h_input_tokens": 0,
+          "ephemeral_5m_input_tokens": 168
+        },
+        "inference_geo": "",
+        "iterations": [],
+        "speed": "standard"
+      }
+    },
+    "tool_use_id": "toolu_19XRpC23JCNfq7YmGhPyr2QC"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_response.content[0].text",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

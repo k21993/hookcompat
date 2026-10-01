@@ -1,0 +1,29 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T065708936Z-5872c2fb-2465-42bf-93c1-2412e349284f",
+  "harness": "claude-code",
+  "cliVersion": "2.1.62",
+  "scenario": "pretooluse-research-subagent",
+  "event": "Stop",
+  "receivedAt": "2026-10-01T06:57:08.936Z",
+  "runId": "2026-10-01T065653495Z-0eb311c8",
+  "payload": {
+    "session_id": "5d67aef7-6fa2-41eb-815c-a554809a5e25",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/5d67aef7-6fa2-41eb-815c-a554809a5e25.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "Stop",
+    "stop_hook_active": false,
+    "last_assistant_message": "The command has been executed. The file `hookcompat-marker-775278cbdc5a.txt` was created with the content `hookcompat`."
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd"
+  ],
+  "review": {
+    "status": "unreviewed"
+  }
+}

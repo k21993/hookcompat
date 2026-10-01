@@ -1,0 +1,38 @@
+{
+  "fixtureFormat": 1,
+  "kind": "capture",
+  "invocationId": "2026-10-01T065717897Z-beb801f7-1cad-4f00-90c2-a51753e09641",
+  "harness": "claude-code",
+  "cliVersion": "2.1.63",
+  "scenario": "pretooluse-research-subagent",
+  "event": "PreToolUse",
+  "receivedAt": "2026-10-01T06:57:17.897Z",
+  "runId": "2026-10-01T065709622Z-5d892db2",
+  "payload": {
+    "session_id": "35216304-bb01-4b6e-94f9-b71b3380aeb9",
+    "transcript_path": "/hookcompat/home/.claude/projects/-hookcompat-repo/35216304-bb01-4b6e-94f9-b71b3380aeb9.jsonl",
+    "cwd": "/hookcompat/repo",
+    "permission_mode": "default",
+    "hook_event_name": "PreToolUse",
+    "tool_name": "Agent",
+    "tool_input": {
+      "description": "Run specific shell command",
+      "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-26ed7d9e9963.txt",
+      "subagent_type": "research"
+    },
+    "tool_use_id": "toolu_76ZrD1EDeEGf23uFlDKADQDl"
+  },
+  "stdinTruncated": false,
+  "redactions": [
+    "session_id",
+    "transcript_path",
+    "cwd",
+    "tool_use_id"
+  ],
+  "review": {
+    "status": "reviewed",
+    "by": "OpenAI Codex (AI-assisted review)",
+    "at": "2026-10-01T07:12:53Z",
+    "note": "Reviewed for schema validity, internal consistency, redaction, and agreement with recording evidence. Raw unredacted stdin was not independently observed."
+  }
+}
