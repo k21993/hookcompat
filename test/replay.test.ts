@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { replay } from "../src/replay.js";
+import { replay, withRepoDir } from "../src/replay.js";
 
 const DATA = fileURLToPath(new URL("../data", import.meta.url));
 const EXAMPLE = fileURLToPath(new URL("../examples/consumer/hookcompat.yml", import.meta.url));
@@ -36,6 +36,18 @@ describe("replay", () => {
 
   it("passes a hook selected by a Task matcher on both versions", async () => {
     expect(await replay(project(CASE, "Task"), DATA)).toMatchObject({ ok: true, executed: 2, passed: 2 });
+  });
+
+  it("points the payload cwd at the project directory", async () => {
+    const hook = { type: "command", command: 'test "$(jq -r .cwd)" = "$CLAUDE_PROJECT_DIR" && exit 2; exit 0' };
+    expect(await replay(project(CASE, "*", hook), DATA)).toMatchObject({ ok: true, passed: 2 });
+  });
+
+  it("maps paths under the repo placeholder and leaves look-alike prefixes alone", () => {
+    expect(withRepoDir({ a: ["/hookcompat/repo/foo"], b: "/hookcompat/repository/foo" }, "/work")).toEqual({
+      a: ["/work/foo"],
+      b: "/hookcompat/repository/foo",
+    });
   });
 
   it("fails when nothing matches the filter", async () => {

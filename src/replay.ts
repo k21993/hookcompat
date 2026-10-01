@@ -88,7 +88,7 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
         results.push({ ...base, status: "unsupported", detail: `${config.harness} ${c.event} is not supported yet` });
         continue;
       }
-      const payload = fixture.payload as { tool_name?: string };
+      const payload = withRepoDir(fixture.payload, projectDir) as { tool_name?: string };
       const toolName = payload?.tool_name ?? "";
       const { hooks, unsupported } = hooksFor(settings, toolName);
       if (unsupported.length > 0) {
@@ -130,6 +130,21 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
   else if (executed === 0) report.error = "no case was executed";
   report.ok = !report.error && report.failed === 0;
   return report;
+}
+
+/** The recorder redacts the sandbox repo to this path; it stands for the adopter's checkout. */
+const REPO_PLACEHOLDER = "/hookcompat/repo";
+
+/** Point redacted repo paths (cwd and paths under it) at the adopter's checkout, so hooks can find their files. */
+export function withRepoDir(value: unknown, dir: string): unknown {
+  if (typeof value === "string") {
+    return value === REPO_PLACEHOLDER || value.startsWith(REPO_PLACEHOLDER + "/") ? dir + value.slice(REPO_PLACEHOLDER.length) : value;
+  }
+  if (Array.isArray(value)) return value.map((v) => withRepoDir(v, dir));
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, withRepoDir(v, dir)]));
+  }
+  return value;
 }
 
 function findFixtures(dataDir: string, harness: string, scenario: string, event: string, versions?: string[]) {
