@@ -23,7 +23,7 @@
     "tool_response": {
       "status": "completed",
       "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-0fa472cbb3f6.txt",
-      "agentId": "aa4c608f809542dfd",
+      "agentId": "6b5ea70c7a84a17be",
       "content": [
         {
           "type": "text",
@@ -59,7 +59,8 @@
     "session_id",
     "transcript_path",
     "cwd",
-    "tool_use_id"
+    "tool_use_id",
+    "tool_response.agentId"
   ],
   "review": {
     "status": "unreviewed"

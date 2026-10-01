@@ -14,7 +14,7 @@
     "cwd": "/hookcompat/repo",
     "prompt_id": "8f3215af-757c-4e4e-a7ce-0ea6ace70869",
     "permission_mode": "auto",
-    "agent_id": "a2eb4069b3a570d68",
+    "agent_id": "16b72e580c064fa6e",
     "agent_type": "trellis-research",
     "effort": {
       "level": "medium"
@@ -41,7 +41,8 @@
     "transcript_path",
     "cwd",
     "prompt_id",
-    "tool_use_id"
+    "tool_use_id",
+    "agent_id"
   ],
   "review": {
     "status": "unreviewed"

@@ -28,7 +28,7 @@
     "tool_response": {
       "status": "completed",
       "prompt": "Run exactly this shell command and nothing else, then stop: echo hookcompat > hookcompat-marker-4303b475316e.txt",
-      "agentId": "a2eb4069b3a570d68",
+      "agentId": "16b72e580c064fa6e",
       "agentType": "trellis-research",
       "handback": "send",
       "handbackReport": {
@@ -40,7 +40,7 @@
       "content": [
         {
           "type": "text",
-          "text": "This agent's report was delivered to you as a message from \"a2eb4069b3a570d68\" (its SubagentHandback call). Read it there; it is not repeated here.\n"
+          "text": "This agent's report was delivered to you as a message from \"16b72e580c064fa6e\" (its SubagentHandback call). Read it there; it is not repeated here.\n"
         }
       ],
       "resolvedModel": "claude-sonnet-5-5",
@@ -101,7 +101,9 @@
     "cwd",
     "prompt_id",
     "tool_response.handbackReport.text",
-    "tool_use_id"
+    "tool_use_id",
+    "tool_response.agentId",
+    "tool_response.content[0].text"
   ],
   "review": {
     "status": "unreviewed"
