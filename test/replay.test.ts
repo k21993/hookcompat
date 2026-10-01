@@ -38,6 +38,11 @@ describe("replay", () => {
     expect(await replay(project(CASE, "Task"), DATA)).toMatchObject({ ok: true, executed: 2, passed: 2 });
   });
 
+  it("points the payload cwd at the project directory", async () => {
+    const hook = { type: "command", command: 'test "$(jq -r .cwd)" = "$CLAUDE_PROJECT_DIR" && exit 2; exit 0' };
+    expect(await replay(project(CASE, "*", hook), DATA)).toMatchObject({ ok: true, passed: 2 });
+  });
+
   it("fails when nothing matches the filter", async () => {
     const config = "harness: claude-code\nsettings: settings.json\ncases:\n  - scenario: no-such-scenario\n    expect: deny\n";
     expect(await replay(project(config), DATA)).toMatchObject({ ok: false, executed: 0, error: "no matching fixtures" });

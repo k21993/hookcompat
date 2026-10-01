@@ -30,6 +30,6 @@ The run fails if any case fails, if no reviewed fixture matches, or if no case w
 ## Limits
 
 - Claude Code `PreToolUse` and command hooks only. Anything else is reported as unsupported.
-- Payloads are unmodified captures. Paths in them are redacted, so `cwd` is `/hookcompat/repo`, not your checkout.
+- Payloads are captures as recorded, with one change: the redacted repo path `/hookcompat/repo` (in `cwd` and paths under it) is replaced with the directory of `hookcompat.yml`, so hooks that find the repo from `cwd` work. Other redacted paths, such as `transcript_path`, point nowhere.
 - Hooks run with `sh -c` in the directory of `hookcompat.yml`, with `PATH`, `HOME` and `CLAUDE_PROJECT_DIR` set. Your hook's own runtime (Python, `jq` and so on) must be installed in your workflow.
 - Linux runners only.
