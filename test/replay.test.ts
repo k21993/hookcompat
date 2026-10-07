@@ -1,9 +1,9 @@
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { replay, withRepoDir } from "../src/replay.js";
+import { replay, summary, withRepoDir } from "../src/replay.js";
 
 const DATA = fileURLToPath(new URL("../data", import.meta.url));
 const EXAMPLE = fileURLToPath(new URL("../examples/consumer/hookcompat.yml", import.meta.url));
@@ -68,6 +68,72 @@ describe("replay", () => {
   it("fails when every case is unsupported", async () => {
     const report = await replay(project(CASE, "*", { type: "prompt", prompt: "deny subagents" }), DATA);
     expect(report).toMatchObject({ ok: false, executed: 0, unsupported: 2 });
+  });
+
+  it.each(["async", "asyncRewake"])("does not execute a matching %s hook", async (flag) => {
+    const hook = { ...DENY, command: "touch executed; exit 2", [flag]: true };
+    const config = project(CASE, "*", hook);
+    expect(await replay(config, DATA)).toMatchObject({ ok: false, executed: 0, passed: 0, unsupported: 2 });
+    expect(existsSync(join(config, "..", "executed"))).toBe(false);
+  });
+
+  it("fails unsupported cases even when another case passes", async () => {
+    const config = project(CASE + "  - scenario: pretooluse-shell-write\n    expect: no-opinion\n", "Task", { ...DENY, async: true });
+    const report = await replay(config, DATA);
+    expect(report).toMatchObject({ ok: false, passed: 3, unsupported: 2 });
+    expect(summary(report)).toContain("UNSUPPORTED");
+  });
+
+  it.each(["SessionStart", undefined])("fails a deny with output event %s", async (hookEventName) => {
+    const output = JSON.stringify({ hookSpecificOutput: { hookEventName, permissionDecision: "deny" } });
+    const report = await replay(project(CASE, "*", { type: "command", command: `echo '${output}'` }), DATA);
+    expect(report).toMatchObject({ ok: false, failed: 2 });
+    expect(report.results.every((r) => r.got?.kind === "error")).toBe(true);
+    expect(summary(report)).toContain('expected "PreToolUse"');
+  });
+
+  it("fails a missing scenario even when the harmless case passes", async () => {
+    const config = CASE.replace("pretooluse-subagent", "pretooluse-shell-git-reset-hadr") +
+      "  - scenario: pretooluse-shell-write\n    expect: no-opinion\n";
+    const report = await replay(project(config, "Task"), DATA);
+    expect(report).toMatchObject({ ok: false, passed: 3 });
+    expect(report.error).toContain("pretooluse-shell-git-reset-hadr");
+  });
+
+  it("fails a missing version even when another requested version passes", async () => {
+    const report = await replay(project(CASE + "    versions: [2.1.62, 0.0.0]\n"), DATA);
+    expect(report).toMatchObject({ ok: false, passed: 1 });
+    expect(report.error).toContain("0.0.0");
+    expect(report.error).toContain("pretooluse-subagent");
+  });
+
+  it("fails a case with only unreviewed fixtures even when another case passes", async () => {
+    const config = CASE + "  - scenario: pretooluse-subagent\n    event: Stop\n    expect: no-opinion\n";
+    const report = await replay(project(config), DATA);
+    expect(report).toMatchObject({ ok: false, passed: 2, unreviewed: 2 });
+    expect(report.error).toContain("Stop");
+  });
+
+  it("rejects an empty version filter instead of omitting the case", async () => {
+    await expect(replay(project(CASE + "    versions: []\n"), DATA)).rejects.toThrow();
+  });
+
+  it.each([false, true])("requires every requested version to be reviewed when versions is explicit: %s", async (explicit) => {
+    const data = mkdtempSync(join(tmpdir(), "hookcompat-fixtures-"));
+    try {
+      cpSync(join(DATA, "fixtures"), join(data, "fixtures"), { recursive: true });
+      const scenario = join(data, "fixtures", "claude-code", "2.1.63", "pretooluse-subagent");
+      const path = join(scenario, readdirSync(scenario).find((name) => name.includes("-PreToolUse-"))!);
+      const fixture = JSON.parse(readFileSync(path, "utf8"));
+      fixture.review = { status: "unreviewed" };
+      writeFileSync(path, JSON.stringify(fixture));
+      const config = project(CASE + (explicit ? "    versions: [2.1.62, 2.1.63]\n" : ""));
+      const report = await replay(config, data);
+      expect(report).toMatchObject({ ok: !explicit, passed: 1, unreviewed: 1 });
+      if (explicit) expect(report.error).toContain("2.1.63");
+    } finally {
+      rmSync(data, { recursive: true, force: true });
+    }
   });
 
   it("skips unreviewed fixtures, and fails if none are left", async () => {
