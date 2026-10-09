@@ -1,7 +1,7 @@
 // Expected results are written by hand from the Claude Code hooks docs
 // (code.claude.com/docs/en/hooks, checked 2026-09-30) and live captures. They are not produced by our code.
 import { describe, expect, it } from "vitest";
-import { combine, decode, matches } from "../../src/contracts/claude-code.js";
+import { combine, decode, hooksFor, matches } from "../../src/contracts/claude-code.js";
 
 const run = (exitCode: number, stdout = "", stderr = "") => ({ exitCode, timedOut: false, stdout, stderr });
 const specific = (permissionDecision: unknown) =>
@@ -32,6 +32,16 @@ describe("Claude Code PreToolUse decode", () => {
     expect(decode(run(0, out)).kind).toBe("error");
   });
 
+  it.each(["SessionStart", "PostToolUse", undefined])("rejects a permission decision for event %s", (hookEventName) => {
+    const out = JSON.stringify({ hookSpecificOutput: { hookEventName, permissionDecision: "deny" } });
+    expect(decode(run(0, out))).toMatchObject({ kind: "error", detail: expect.stringContaining("expected \"PreToolUse\"") });
+  });
+
+  it("does not fall back to a legacy deny when the nested event is invalid", () => {
+    const out = JSON.stringify({ decision: "block", hookSpecificOutput: { hookEventName: "SessionStart", permissionDecision: "deny" } });
+    expect(decode(run(0, out)).kind).toBe("error");
+  });
+
   it("treats exit 0 without JSON as no opinion, and other exit codes as errors", () => {
     // Docs: other non-zero exit codes are non-blocking errors.
     expect(decode(run(0)).kind).toBe("no-opinion");
@@ -57,5 +67,18 @@ describe("Claude Code matchers", () => {
     // Not covered by the issue, so not assumed.
     expect(matches("T.*", "Agent")).toBe(false);
     expect(matches("Task|Bash", "Agent")).toBe(false);
+  });
+});
+
+describe("Claude Code command selection", () => {
+  it.each(["async", "asyncRewake"])("reports %s hooks as unsupported without selecting their command", (flag) => {
+    const settings = { hooks: { PreToolUse: [{ matcher: "Bash", hooks: [{ type: "command", command: "exit 2", [flag]: true }] }] } };
+    expect(hooksFor(settings, "Bash")).toEqual({ hooks: [], unsupported: [expect.stringContaining(flag)] });
+    expect(hooksFor(settings, "Read")).toEqual({ hooks: [], unsupported: [] });
+  });
+
+  it("keeps explicitly synchronous command hooks", () => {
+    const settings = { hooks: { PreToolUse: [{ hooks: [{ type: "command", command: "exit 2", async: false, asyncRewake: false }] }] } };
+    expect(hooksFor(settings, "Bash")).toEqual({ hooks: [{ command: "exit 2", timeout: undefined }], unsupported: [] });
   });
 });

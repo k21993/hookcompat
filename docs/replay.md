@@ -26,11 +26,14 @@ For each case and version, the Action takes the first capture of the event (defa
 
 Decisions are `allow`, `deny`, `ask`, `defer`, `no-opinion` (exit 0, no decision) and `error`. `no-opinion (no hook matched)` means no matcher matched the recorded `tool_name`. Matchers follow the docs, plus one known alias: the exact matcher `Task` still matches `Agent` (anthropics/claude-code#29677). Regex matchers are not given the alias.
 
-The run fails if any case fails, if no reviewed fixture matches, or if no case was executed.
+Each configured case must have a reviewed fixture. If `versions` is set, every listed version must have one; an empty list is invalid. Without `versions`, unreviewed captures remain skipped and counted as long as the case has a reviewed fixture.
+
+The run fails if any case fails, any selected case is unsupported, a required reviewed fixture is missing, or no case was executed. Missing coverage is reported even when other cases pass. A nested permission decision with a missing or mismatched `hookEventName` is decoded as `error`, not as a valid decision.
 
 ## Limits
 
-- Claude Code `PreToolUse` and command hooks only. Anything else is reported as unsupported.
+- Claude Code `PreToolUse` and synchronous command hooks only. Matching hooks with `async: true` or `asyncRewake: true` are reported as unsupported and are not executed. Background hook results cannot establish a blocking decision. See the [Claude Code hook contract](https://code.claude.com/docs/en/hooks#run-hooks-in-the-background).
+- Replay checks hook-command results for selected recorded inputs. It does not launch Claude Code or verify that a live tool action was blocked.
 - Payloads are captures as recorded, with one change: the redacted repo path `/hookcompat/repo` (in `cwd` and paths under it) is replaced with the directory of `hookcompat.yml`, so hooks that find the repo from `cwd` work. Other redacted paths, such as `transcript_path`, point nowhere.
 - Hooks run with `sh -c` in the directory of `hookcompat.yml`, with `PATH`, `HOME` and `CLAUDE_PROJECT_DIR` set, plus `CLAUDE_PLUGIN_ROOT` for a plugin. Your hook's own runtime (Python, `jq` and so on) must be installed in your workflow.
 - Linux runners only.

@@ -51,10 +51,12 @@ export function hooksFor(settings: unknown, toolName: string): { hooks: CommandH
   const entries = (settings as { hooks?: { PreToolUse?: unknown[] } })?.hooks?.PreToolUse ?? [];
   const hooks: CommandHook[] = [];
   const unsupported: string[] = [];
-  for (const entry of entries as { matcher?: string; hooks?: { type?: string; command?: string; timeout?: number }[] }[]) {
+  for (const entry of entries as { matcher?: string; hooks?: { type?: string; command?: string; timeout?: number; async?: boolean; asyncRewake?: boolean }[] }[]) {
     if (!matches(entry.matcher, toolName)) continue;
     for (const h of entry.hooks ?? []) {
-      if (h.type === "command" && typeof h.command === "string") hooks.push({ command: h.command, timeout: h.timeout });
+      if (h.type === "command" && (h.async === true || h.asyncRewake === true)) {
+        unsupported.push(`command hook with ${h.asyncRewake === true ? "asyncRewake" : "async"}: true`);
+      } else if (h.type === "command" && typeof h.command === "string") hooks.push({ command: h.command, timeout: h.timeout });
       else unsupported.push(`hook type "${h.type}"`);
     }
   }
@@ -92,7 +94,7 @@ export function decode(run: HookRun): Decision {
   const specific = out.hookSpecificOutput as Record<string, unknown> | undefined;
   if (specific && specific.permissionDecision !== undefined) {
     if (specific.hookEventName !== "PreToolUse") {
-      warnings.push(`hookEventName is ${JSON.stringify(specific.hookEventName)}, expected "PreToolUse"`);
+      return { kind: "error", detail: `hookEventName is ${JSON.stringify(specific.hookEventName)}, expected "PreToolUse"`, warnings };
     }
     const d = specific.permissionDecision;
     if (typeof d !== "string" || !PERMISSION_DECISIONS.has(d)) {

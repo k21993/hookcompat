@@ -26,7 +26,7 @@ export const ReplayConfig = z
           /** One decision, or a list when several are acceptable. */
           expect: z.union([Kind, z.array(Kind).min(1)]),
           /** Default: every version we have fixtures for. */
-          versions: z.array(z.string()).optional(),
+          versions: z.array(z.string()).min(1).optional(),
         }),
       )
       .min(1),
@@ -78,11 +78,14 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
     ...(pluginRoot && { CLAUDE_PLUGIN_ROOT: pluginRoot }),
   };
   const results: CaseResult[] = [];
+  const coverageErrors: string[] = [];
   let unreviewed = 0;
 
   for (const c of config.cases) {
     const expected = Array.isArray(c.expect) ? c.expect : [c.expect];
-    for (const { version, path } of findFixtures(dataDir, config.harness, c.scenario, c.event, c.versions)) {
+    const fixtures = findFixtures(dataDir, config.harness, c.scenario, c.event, c.versions);
+    const reviewedVersions = new Set<string>();
+    for (const { version, path } of fixtures) {
       const raw = readFileSync(path, "utf8");
       const fixture = CaptureFixture.parse(JSON.parse(raw));
       // Only captures a person has checked count as evidence.
@@ -90,6 +93,7 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
         unreviewed++;
         continue;
       }
+      reviewedVersions.add(version);
       const base = {
         scenario: c.scenario,
         version,
@@ -123,6 +127,13 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
       const got = combine(decisions);
       results.push({ ...base, status: expected.includes(got.kind) ? "pass" : "fail", got, toolName });
     }
+    if (c.versions) {
+      for (const version of new Set(c.versions)) {
+        if (!reviewedVersions.has(version)) coverageErrors.push(`${c.scenario} (${c.event}, ${version}): no reviewed fixture`);
+      }
+    } else if (reviewedVersions.size === 0) {
+      coverageErrors.push(`${c.scenario} (${c.event}): ${fixtures.length ? "no reviewed fixtures" : "no matching fixtures"}`);
+    }
   }
 
   const count = (s: CaseResult["status"]) => results.filter((r) => r.status === s).length;
@@ -140,8 +151,10 @@ export async function replay(configPath: string, dataDir: string): Promise<Repla
   };
   // Zero executed cases is never green.
   if (results.length === 0) report.error = unreviewed ? `no reviewed fixtures (${unreviewed} unreviewed skipped)` : "no matching fixtures";
+  else if (coverageErrors.length > 0) report.error = coverageErrors.join("; ");
   else if (executed === 0) report.error = "no case was executed";
-  report.ok = !report.error && report.failed === 0;
+  else if (report.unsupported > 0) report.error = `${report.unsupported} selected cases are unsupported`;
+  report.ok = !report.error && report.failed === 0 && report.unsupported === 0;
   return report;
 }
 

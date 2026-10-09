@@ -43,7 +43,7 @@ The Action reads your matchers and hook commands from the settings file, runs th
 
 - Each fixture is a hook input captured from a real Claude Code run, with paths, IDs and secrets redacted. See [docs/recording.md](docs/recording.md).
 - Fixtures are labelled with the CLI version and model, and keep the run's context (argv, hook config, OS).
-- Replay only uses fixtures marked `reviewed`. Unreviewed captures are skipped and counted.
+- Replay only uses fixtures marked `reviewed`. Every configured case and explicitly requested version needs a reviewed fixture. Other unreviewed captures are skipped and counted.
 - Replay makes no model calls and needs no API keys.
 
 ## Tested against
@@ -58,7 +58,8 @@ This shows the hook matched and answered `allow`. It does not check the context 
 
 ## Scope and limits
 
-- Replay: Claude Code `PreToolUse` command hooks only. Anything else is reported as unsupported.
+- Replay: Claude Code `PreToolUse` synchronous command hooks only. Unsupported cases fail the run, even when other cases pass. See [replay limits](docs/replay.md#limits).
+- A passing replay establishes the expected hook-command decision for the selected recorded inputs. Live tool enforcement is not tested.
 - Recording: Claude Code and Codex, run by hand on Linux or macOS.
 - It checks the decision (`allow`, `deny`, `ask`, `defer`, `no-opinion`, `error`), not other output such as `updatedInput`.
 - Scenarios:
